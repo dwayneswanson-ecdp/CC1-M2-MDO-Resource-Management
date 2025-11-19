@@ -111,7 +111,7 @@
 
 
   <header>
-    <h1>CC - English — Risk & Financial Control (M2EFIG1)</h1>
+    <h1>CC1 - English — Resource Management (M2MDOG2)</h1>
     <div id="timer"></div>
   </header>
 
@@ -225,24 +225,35 @@
 
         <!-- PART B -->
         <div id="partB">
-          <h2>Part B – Writing Task</h2>
-          <p class="muted">“PayGate Ltd — Possible Fraud Risk”
+          <h2>Part B – Writing Task: Email to Your Manager</h2>
 
-You are a Financial Controller at PayGate Ltd, a European online-payment company.
+<p class="muted"><strong>Context</strong></p>
+<p class="muted">
+  In class, we discussed the business strategy of the sportswear brand <em>On</em>.
+  The discussion focused on how the company uses its resources to support growth and remain competitive.
+  During the session, you saw examples related to planning future performance, managing internal costs,
+  and improving the way the company works with partners and customers. Your manager did not attend
+  the presentation but wants to understand what you learned and how it could help the company.
+</p>
 
-During a recent internal audit, you noticed that the company’s Asian branch reports very large profits, but the local bank accounts do not show the same cash balance. The local managers say the money is held by a third-party partner, but they refuse to share official documents.
+<p class="muted"><strong>Task</strong></p>
+<ul class="muted">
+  <li>Explain what you understood about how the company is managing its resources.</li>
+  <li>Analyse why this approach is important for long-term performance.</li>
+  <li>Suggest 1–2 concrete actions you think a sportswear company should take to improve its strategy.</li>
+</ul>
 
-Write an email to your Chief Financial Officer (CFO) or Audit Manager to:
-
-1. Summarize what you discovered,
-2. Explain the risks to the company (financial, legal, or reputational),
-3. Recommend what action should be taken next
-
-Requirements:
-
-1. Use at least three vocabulary words from Section A
-
-2. Follow a clear professional structure: Subject → Greeting → Body →    Closing.</p>
+<p class="muted"><strong>Requirements</strong></p>
+<ul class="muted">
+  <li>Use at least THREE (3) words from the vocabulary discussed in class.</li>
+  <li>
+    Include a clear email structure:
+    subject line; greeting / introduction; 2–3 short paragraphs presenting your ideas and examples;
+    conclusion / closing sentence; appropriate sign-off (e.g. “Best regards,” + your name).
+  </li>
+  <li>Use formal, professional language.</li>
+  <li>Write a coherent, well-organised email.</li>
+</ul>
 
           <div class="editor-card">
             <div id="editor"></div>
@@ -374,22 +385,31 @@ window.addEventListener("blur", () => {
 });
     
     // Correct answers + word list (auto-filled)
-    const correctAnswers = {
-      "q1":"An independent examination of a company’s accounts, processes, and controls to give reasonable assurance that the financial statements are free from misstatement.",
-      "q2":"The system of rules, roles, and processes used to direct and control a company",
-      "q3":"Identifying key risks, estimating likelihood and impact, and visualizing them to prioritize actions.",
-      "q4":"A financial reserve for a potential future expense or loss",
-      "q5":"An intentional act of deception for personal or corporate gain",
-      "q6":"A legal responsibility to pay for damages or debts",
-      "q7":"Combining the financial results of different subsidiaries",
-      "q8":"When an asset (like equipment or goodwill) loses value, and the company must reduce its value in the financial statements to reflect that loss",
-      "q9":"Any party affected by or interested in the company (shareholders, employees, customers, suppliers, lenders, regulators, communities).",
-      "q10":"Adhering to laws, regulations, standards, and internal policies"
-    };
-    const wordNames = [
-      "Audit","Governance","Risk Mapping","Provisions","Fraud",
-      "Liability","Consolidation","Impairment","Stakeholder","Compliance"
-    ];
+ const correctAnswers = {
+  q1: "A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.",
+  q2: "A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.",
+  q3: "A measurable value that shows how effectively a company or team is achieving an important business objective.",
+  q4: "A company or person that provides goods or services to another company, usually as part of a commercial contract.",
+  q5: "The total number of employees working in an organisation, department, or team.",
+  q6: "The time between placing an order and receiving the product or service, including production and delivery.",
+  q7: "The stock of goods, materials, or products that a company holds for use in production or for sale to customers.",
+  q8: "The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.",
+  q9: "Doing business in a way that meets current needs without harming the environment, society, or future generations.",
+  q10: "A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage."
+};
+
+const wordNames = [
+  "Budget",
+  "Forecast",
+  "KPI (Key Performance Indicator)",
+  "Supplier",
+  "Headcount",
+  "Lead time",
+  "Inventory",
+  "Overhead",
+  "Sustainability",
+  "ROI (Return on Investment)"
+];
 
 // Lazy Quill
 let quill = null;
@@ -694,11 +714,11 @@ if (examDeadline) {
       const finalNote  = "___ / 20";
 
       const htmlReport = `
-        <h2 style="color:#004080;margin:0 0 8px 0;">Results – CC - English - – ${name} (M2EFIG1)</h2>
+        <h2 style="color:#004080;margin:0 0 8px 0;">Results – CC - English - – ${name} (M2 MDO G2)</h2>
         <table style="border-collapse:collapse;width:100%;max-width:640px;font-size:14px;margin:0 0 12px 0;">
           <tr><td style="padding:4px 0;"><b>Student Name:</b> ${name}</td></tr>
           <tr><td style="padding:4px 0;"><b>Student Email:</b> ${email}</td></tr>
-          <tr><td style="padding:4px 0;"><b>Class Code:</b> M2EFIG1</td></tr>
+          <tr><td style="padding:4px 0;"><b>Class Code:</b> M2MDOG2 </td></tr>
           <tr><td style="padding:4px 0;"><b>Time Taken:</b> ${minutesUsed} min</td></tr>
         </table>
         <hr style="border:none;border-top:1px solid #ddd;margin:14px 0;">
