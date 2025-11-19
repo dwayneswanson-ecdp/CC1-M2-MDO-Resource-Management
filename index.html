@@ -506,20 +506,57 @@ function terminateExam(message) {
   });
 
   // Stop the timer interval, but DO NOT touch examDeadline or localStorage
-  clearInterval(timer);
+  try {
+    clearInterval(timer);
+  } catch (e) {
+    console.error("Error clearing timer:", e);
+  }
 
   // Flags: exam is no longer active, submission can be allowed again later
   examActive = false;
   examSubmitted = false;
 
+  // Show the message (user clicks OK to continue)
   alert(
     message ||
       "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
   );
 
-  // 🔄 Now do a REAL reload of the page
-  // Because examDeadline is saved in localStorage, we will keep the same 40-minute window.
-  location.reload();
+  // 🔁 Soft reset (fallback if reload is blocked)
+
+  // Clear Part A + hidden fields
+  if (form) {
+    form.reset();
+  }
+
+  // Clear the Quill editor content (Part B)
+  if (quill) {
+    quill.setText(""); // fully blank
+  }
+
+  // Reset UI to login only
+  if (exam) exam.style.display = "none";
+  if (confirmSec) confirmSec.style.display = "none";
+  if (login) login.style.display = "block";
+
+  // Re-enable submit button if it was disabled
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Envoyer l'épreuve";
+  }
+
+  console.log("✅ Exam terminated; attempting hard reload…");
+
+  // 🔄 Hard reload with a tiny delay
+  try {
+    setTimeout(() => {
+      console.log("🔁 Reloading page now…");
+      // Do NOT clear localStorage deadline here – we want to keep the 40-min window
+      window.location.href = window.location.href; // equivalent to location.reload() but more explicit
+    }, 150);
+  } catch (e) {
+    console.error("Reload failed:", e);
+  }
 }
     
     function randomizeSelectsKeepFirst() {
