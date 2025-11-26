@@ -364,6 +364,16 @@ let examActive = false;
     // Track whether we are in the brief "starting exam" phase
 let isStartingExam = false;
 
+    document.addEventListener("keydown", (e) => {
+  if ((e.key === "Escape" || e.key === "Esc") && examActive) {
+    // prevent weird double behaviour
+    e.preventDefault();
+    terminateExam(
+      "Vous avez quitté le mode plein écran ou appuyé sur Échap. L'épreuve est terminée et doit être recommencée."
+    );
+  }
+});
+
     // If the page becomes hidden (changed tab, changed desktop, other app on top)
 document.addEventListener("visibilitychange", () => {
   if (isStartingExam) {
