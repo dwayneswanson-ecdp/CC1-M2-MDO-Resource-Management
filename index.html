@@ -313,6 +313,53 @@
     // NEW: submit button (for disabling on send)
     const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
+    function resetToLanding() {
+  console.log("🔄 resetToLanding called");
+
+  // Stop timer if running
+  try {
+    clearInterval(timer);
+  } catch (e) {
+    console.error("Error clearing timer in resetToLanding:", e);
+  }
+
+  // Flags
+  examActive = false;
+  examSubmitted = false;
+  isStartingExam = false;
+
+  // Reset form (Part A + hidden fields)
+  if (form) {
+    form.reset();
+  }
+
+  // Clear Quill
+  if (quill) {
+    quill.setText("");
+  }
+
+  // Clear login inputs
+  if (studentFirstNameInput) studentFirstNameInput.value = "";
+  if (studentLastNameInput)  studentLastNameInput.value  = "";
+  if (studentEmailInput)     studentEmailInput.value     = "";
+  if (classCodeInput)        classCodeInput.value        = "";
+
+  // Force only login visible
+  if (login)      login.style.display      = "block";
+  if (confirmSec) confirmSec.style.display = "none";
+  if (exam)       exam.style.display       = "none";
+
+  // Re-enable submit button if needed
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Envoyer l'épreuve";
+  }
+
+  console.log("✅ Landing screen forced: login shown, confirm/exam hidden.");
+}
+    // Force a clean landing state on every load (overrides Safari's cached view)
+resetToLanding();
+
     // Guard: if any required node missing, stop and log
     const required = [
       login, confirmSec, exam, startBtn, confirmBackBtn, confirmBeginBtn,
@@ -354,8 +401,6 @@ if (storedDeadline) {
   }
 }
     
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-console.log("Browser detected as Safari?", isSafari);
     // NEW: flag to avoid duplicate submissions
     let examSubmitted = false;
 
@@ -402,17 +447,19 @@ window.addEventListener("blur", () => {
 });
 
 document.addEventListener("fullscreenchange", () => {
-  // On Safari, we avoid using fullscreenchange to prevent the freeze
-  if (isSafari) {
+  console.log("📺 fullscreenchange fired", {
+    examActive,
+    fullscreenElement: !!document.fullscreenElement,
+    isStartingExam
+  });
+
+  // Ignore if exam not active or we’re in the tiny startup grace period
+  if (!examActive || isStartingExam) {
     return;
   }
 
-  console.log("📺 fullscreenchange fired", {
-    examActive,
-    fullscreenElement: !!document.fullscreenElement
-  });
-
-  if (examActive && !document.fullscreenElement && !isStartingExam) {
+  // If we were in fullscreen and now we’re not → terminate
+  if (!document.fullscreenElement) {
     console.log("⛔ Leaving fullscreen while examActive → terminateExam()");
     terminateExam(
       "Vous avez quitté le mode plein écran. L'épreuve est terminée et doit être recommencée."
@@ -532,57 +579,20 @@ function terminateExam(message) {
     examActiveBefore: examActive
   });
 
-  // If exam already inactive, ignore stray calls
+  // If already inactive, ignore stray calls
   if (!examActive) {
     console.log("terminateExam called but examActive is already false – ignoring.");
     return;
   }
 
-  // Stop timer
-  try {
-    clearInterval(timer);
-  } catch (e) {
-    console.error("Error clearing timer:", e);
-  }
-
-  // Flags
-  examActive = false;
-  examSubmitted = false;
-
-  // Show message to student
+  // Show message first
   alert(
     message ||
       "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
   );
 
-  // Reset the exam form (Part A + hidden inputs)
-  if (form) {
-    form.reset();
-  }
-
-  // Clear Quill editor (Part B)
-  if (quill) {
-    quill.setText("");
-  }
-
-  // Clear login inputs so they MUST re-enter information
-  if (studentFirstNameInput) studentFirstNameInput.value = "";
-  if (studentLastNameInput)  studentLastNameInput.value  = "";
-  if (studentEmailInput)     studentEmailInput.value     = "";
-  if (classCodeInput)        classCodeInput.value        = "";
-
-  // Force UI back to landing/login screen
-  if (exam)       exam.style.display       = "none";
-  if (confirmSec) confirmSec.style.display = "none";
-  if (login)      login.style.display      = "block";
-
-  // Re-enable submit button if it was disabled
-  if (submitBtn) {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Envoyer l'épreuve";
-  }
-
-  console.log("✅ Exam terminated and reset to login screen.");
+  // Then do the reset
+  resetToLanding();
 }
     
     function randomizeSelectsKeepFirst() {
