@@ -512,58 +512,57 @@ function terminateExam(message) {
     examActiveBefore: examActive
   });
 
-  // Stop the timer interval, but DO NOT touch examDeadline or localStorage
+  // If exam is already not active, don't do anything
+  if (!examActive) {
+    console.log("terminateExam called but examActive is false – ignoring.");
+    return;
+  }
+
+  // Stop the timer
   try {
     clearInterval(timer);
   } catch (e) {
     console.error("Error clearing timer:", e);
   }
 
-  // Flags: exam is no longer active, submission can be allowed again later
+  // Flags
   examActive = false;
   examSubmitted = false;
 
-  // Show the message (user clicks OK to continue)
+  // Show message once
   alert(
     message ||
       "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
   );
 
-  // 🔁 Soft reset (fallback if reload is blocked)
-
-  // Clear Part A + hidden fields
+  // Reset the exam form (Part A + hidden fields)
   if (form) {
     form.reset();
   }
 
-  // Clear the Quill editor content (Part B)
+  // Clear Quill (Part B)
   if (quill) {
-    quill.setText(""); // fully blank
+    quill.setText("");
   }
 
-  // Reset UI to login only
-  if (exam) exam.style.display = "none";
+  // Clear login inputs so the student MUST re-enter info
+  if (studentFirstNameInput) studentFirstNameInput.value = "";
+  if (studentLastNameInput)  studentLastNameInput.value  = "";
+  if (studentEmailInput)     studentEmailInput.value     = "";
+  if (classCodeInput)        classCodeInput.value        = "";
+
+  // Force UI back to landing page
+  if (exam)       exam.style.display       = "none";
   if (confirmSec) confirmSec.style.display = "none";
-  if (login) login.style.display = "block";
+  if (login)      login.style.display      = "block";
 
   // Re-enable submit button if it was disabled
   if (submitBtn) {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Envoyer l'épreuve";
+    submitBtn.textContent = "Submit Exam";
   }
 
-  console.log("✅ Exam terminated; attempting hard reload…");
-
-  // 🔄 Hard reload with a tiny delay
-  try {
-    setTimeout(() => {
-      console.log("🔁 Reloading page now…");
-      // Do NOT clear localStorage deadline here – we want to keep the 40-min window
-      window.location.href = window.location.href; // equivalent to location.reload() but more explicit
-    }, 150);
-  } catch (e) {
-    console.error("Reload failed:", e);
-  }
+  console.log("✅ Exam terminated and reset to login screen.");
 }
     
     function randomizeSelectsKeepFirst() {
