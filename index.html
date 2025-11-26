@@ -379,11 +379,47 @@
     items.forEach(li => list.appendChild(li));
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    // EmailJS init
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // 🔹 Detect Safari (desktop & iOS) – block exam on this browser
+    const ua = navigator.userAgent;
+    const isSafari = /^((?!chrome|crios|fxios|android).)*safari/i.test(ua);
+
+    if (isSafari) {
+      const main = document.querySelector("main");
+      if (main) {
+        main.innerHTML = `
+          <section class="card">
+            <h2>Browser not supported</h2>
+            <p>
+              For this exam, Safari is not supported due to technical limitations.
+              Please open this link in <strong>Google Chrome</strong>,
+              <strong>Microsoft Edge</strong>, or <strong>Mozilla Firefox</strong>.
+            </p>
+            <p class="muted">
+              If you are already in one of those browsers and still see this message,
+              please contact your instructor.
+            </p>
+          </section>
+        `;
+      }
+
+      // Optional: clear timer text, just in case
+      const timer = document.getElementById("timer");
+      if (timer) {
+        timer.textContent = "";
+      }
+
+      // ❗ VERY IMPORTANT: stop here so no exam logic runs on Safari
+      return;
+    }
+
+    // 🔻 Your existing code continues below this line
     if (window.emailjs) {
       try {
-        emailjs.init({ publicKey: "Bb0oPYBiZGQcyIz5r" });
+        emailjs.init({
+          publicKey: "Bb0oPYBiZGQcyIz5r",
+        });
       } catch (e) {
         console.error("EmailJS init error:", e);
       }
