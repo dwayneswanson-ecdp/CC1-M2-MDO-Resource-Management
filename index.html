@@ -349,12 +349,13 @@ if (storedDeadline) {
       new Date(examDeadline).toISOString()
     );
   } else {
-    // Deadline is invalid or already in the past → clear it so a fresh exam can start
     console.log("⏱ Stored examDeadline is expired/invalid, clearing it.");
     localStorage.removeItem(DEADLINE_KEY);
   }
 }
-
+    
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+console.log("Browser detected as Safari?", isSafari);
     // NEW: flag to avoid duplicate submissions
     let examSubmitted = false;
 
@@ -364,9 +365,9 @@ let examActive = false;
     // Track whether we are in the brief "starting exam" phase
 let isStartingExam = false;
 
-    document.addEventListener("keydown", (e) => {
-  if ((e.key === "Escape" || e.key === "Esc") && examActive) {
-    // prevent weird double behaviour
+// ESC key → terminate exam (especially important on Safari)
+document.addEventListener("keydown", (e) => {
+  if ((e.key === "Escape" || e.key === "Esc") && examActive && !isStartingExam) {
     e.preventDefault();
     terminateExam(
       "Vous avez quitté le mode plein écran ou appuyé sur Échap. L'épreuve est terminée et doit être recommencée."
@@ -400,15 +401,22 @@ window.addEventListener("blur", () => {
   }
 });
 
- document.addEventListener("fullscreenchange", () => {
+document.addEventListener("fullscreenchange", () => {
+  // On Safari, we avoid using fullscreenchange to prevent the freeze
+  if (isSafari) {
+    return;
+  }
+
   console.log("📺 fullscreenchange fired", {
     examActive,
     fullscreenElement: !!document.fullscreenElement
   });
 
-  if (examActive && !document.fullscreenElement) {
+  if (examActive && !document.fullscreenElement && !isStartingExam) {
     console.log("⛔ Leaving fullscreen while examActive → terminateExam()");
-    terminateExam("Vous avez quitté le mode plein écran. L'épreuve est terminée et doit être recommencée.");
+    terminateExam(
+      "Vous avez quitté le mode plein écran. L'épreuve est terminée et doit être recommencée."
+    );
   }
 });
     
@@ -512,7 +520,9 @@ function ensureQuill() {
 
 function enableFullScreen() {
   if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.warn("Fullscreen request failed:", err);
+    });
   }
 }
 
@@ -522,13 +532,13 @@ function terminateExam(message) {
     examActiveBefore: examActive
   });
 
-  // If exam is already not active, don't do anything
+  // If exam already inactive, ignore stray calls
   if (!examActive) {
-    console.log("terminateExam called but examActive is false – ignoring.");
+    console.log("terminateExam called but examActive is already false – ignoring.");
     return;
   }
 
-  // Stop the timer
+  // Stop timer
   try {
     clearInterval(timer);
   } catch (e) {
@@ -539,29 +549,29 @@ function terminateExam(message) {
   examActive = false;
   examSubmitted = false;
 
-  // Show message once
+  // Show message to student
   alert(
     message ||
       "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
   );
 
-  // Reset the exam form (Part A + hidden fields)
+  // Reset the exam form (Part A + hidden inputs)
   if (form) {
     form.reset();
   }
 
-  // Clear Quill (Part B)
+  // Clear Quill editor (Part B)
   if (quill) {
     quill.setText("");
   }
 
-  // Clear login inputs so the student MUST re-enter info
+  // Clear login inputs so they MUST re-enter information
   if (studentFirstNameInput) studentFirstNameInput.value = "";
   if (studentLastNameInput)  studentLastNameInput.value  = "";
   if (studentEmailInput)     studentEmailInput.value     = "";
   if (classCodeInput)        classCodeInput.value        = "";
 
-  // Force UI back to landing page
+  // Force UI back to landing/login screen
   if (exam)       exam.style.display       = "none";
   if (confirmSec) confirmSec.style.display = "none";
   if (login)      login.style.display      = "block";
@@ -569,7 +579,7 @@ function terminateExam(message) {
   // Re-enable submit button if it was disabled
   if (submitBtn) {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Submit Exam";
+    submitBtn.textContent = "Envoyer l'épreuve";
   }
 
   console.log("✅ Exam terminated and reset to login screen.");
