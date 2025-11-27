@@ -261,7 +261,7 @@
 
           <div class="btn-row">
             <button type="button" class="btn-light" id="toPartA">← Back to Part A</button>
-            <button type="submit">Submit Exam</button>
+            <button type="submit">Envoyer l'épreuve</button>
           </div>
         </div>
       </form>
@@ -278,13 +278,13 @@ const EXAM_CONFIG = {
   examId: "M2MDOG2_CC1_2025",
 
   // Class code students must enter
-  classCode: "M2MDOG2",
+  classCode: "BLANK",
 
   // Optional: special code that puts the exam in debug mode (future use)
   debugCode: "DEBUG",
 
   // Display title for the exam
-  examTitle: "CC1 - English — Resource Management (M2MDOG2)",
+  examTitle: "CC1 - English — Resource Management (M2 MDO G2)",
 
   // Time limit in minutes
   timeLimitMinutes: 40,
@@ -296,10 +296,11 @@ const EXAM_CONFIG = {
   // Label used in the report (class / group name)
   classLabel: "M2MDOG2"
 };
-  // ----- Global exam timer + Quill state -----
-  const DEADLINE_KEY = "examDeadline_" + EXAM_CONFIG.examId;
+// ----- Global exam timer + Quill state -----
+const DEADLINE_KEY = "examDeadline_" + EXAM_CONFIG.examId;
 let examDeadline = null;
 let timer = null;
+let quill = null;   // 👈 add this
 
   // Restore deadline ONLY if still valid
   (function restoreDeadline() {
@@ -537,9 +538,9 @@ if (titleHeader) {
       exam.style.display = "none";
 
       if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Exam";
-      }
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Envoyer l'épreuve";
+}
 
       console.log("✅ Landing screen forced.");
     }
