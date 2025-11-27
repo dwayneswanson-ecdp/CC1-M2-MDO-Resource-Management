@@ -272,11 +272,34 @@
 <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
 <script>
+  // ----- Global configuration for this exam -----
+const EXAM_CONFIG = {
+  // Unique ID for this exam (used for localStorage keys etc.)
+  examId: "M2MDOG2_CC1_2025",
+
+  // Class code students must enter
+  classCode: "M2MDOG2",
+
+  // Optional: special code that puts the exam in debug mode (future use)
+  debugCode: "DEBUG",
+
+  // Display title for the exam
+  examTitle: "CC1 - English — Resource Management (M2MDOG2)",
+
+  // Time limit in minutes
+  timeLimitMinutes: 40,
+
+  // Subject line template for the email you receive
+  // "(NAME)" will be replaced by the student's name
+  emailSubjectTemplate: "(NAME) CC1 - English - M2 MDO G2",
+
+  // Label used in the report (class / group name)
+  classLabel: "M2MDOG2"
+};
   // ----- Global exam timer + Quill state -----
-  const DEADLINE_KEY = "examDeadline_M2MDOG2";
-  let examDeadline = null;   // timestamp in ms
-  let timer = null;          // interval id
-  let quill = null;          // Quill instance
+  const DEADLINE_KEY = "examDeadline_" + EXAM_CONFIG.examId;
+let examDeadline = null;
+let timer = null;
 
   // Restore deadline ONLY if still valid
   (function restoreDeadline() {
@@ -644,7 +667,7 @@ if (isSafari) {
 
       // Set or reuse deadline
       if (!examDeadline) {
-        examDeadline = Date.now() + 40 * 60 * 1000;
+        examDeadline = Date.now() + EXAM_CONFIG.timeLimitMinutes * 60 * 1000;
         localStorage.setItem(DEADLINE_KEY, String(examDeadline));
         console.log("⏱ New examDeadline set:", new Date(examDeadline).toISOString());
       } else {
@@ -736,12 +759,12 @@ if (isSafari) {
       const name = fd.get("studentName") || studentNameField.value;
       const email = fd.get("studentEmail") || studentEmailField.value;
 
-      let minutesUsed = 40;
-      if (examDeadline) {
-        const remainingMs = examDeadline - Date.now();
-        const remainingMin = Math.max(0, Math.floor(remainingMs / 60000));
-        minutesUsed = 40 - remainingMin;
-      }
+     let minutesUsed = EXAM_CONFIG.timeLimitMinutes;
+if (examDeadline) {
+  const remainingMs = examDeadline - Date.now();
+  const remainingMin = Math.max(0, Math.floor(remainingMs / 60000));
+  minutesUsed = EXAM_CONFIG.timeLimitMinutes - remainingMin;
+}
 
       const emailHtml = quill ? quill.root.innerHTML.trim() : "<em>(No response)</em>";
       const totalQs = document.querySelectorAll('#partA select[name^="q"]').length || 10;
