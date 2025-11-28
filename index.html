@@ -25,13 +25,17 @@
       line-height: 1.6;
     }
 
-    header {
-      background: linear-gradient(135deg, #004080, #0066cc);
-      color: #ffffff;
-      padding: 25px 20px;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    }
+    main {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+
+  /* 👇 add this */
+  margin-top: 140px; /* adjust if needed depending on header height */
+}
     header h1 { margin: 0; font-size: 1.9em; letter-spacing: 0.5px; }
     #timer { text-align: right; font-weight: bold; margin-top: 10px; }
 
