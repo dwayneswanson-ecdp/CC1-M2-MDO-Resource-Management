@@ -239,7 +239,53 @@
   .upper {
     text-transform: uppercase;
   }
+/* === Part A – Vocabulary Matching layout === */
 
+#partA h2 {
+  text-align: left;
+  margin-bottom: 0.5rem;
+}
+
+.partA-intro {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 1.25rem;
+}
+
+/* Each line = grid: term on the left, dropdown on the right */
+#partA ol {
+  margin: 0;
+  padding-left: 1.5rem; /* keeps automatic numbering */
+}
+
+#partA ol li {
+  margin-bottom: 12px;
+}
+
+.vocab-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  column-gap: 18px;
+  align-items: center;
+}
+
+.vocab-term {
+  font-size: 0.95rem;
+  color: #111827;
+  font-weight: 500;
+}
+
+.vocab-select {
+  margin: 0;
+}
+
+/* On mobile, stack term + select */
+@media (max-width: 720px) {
+  .vocab-row {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
+}
   /* Responsive tweaks */
   @media (max-width: 720px) {
     body {
@@ -329,58 +375,202 @@
         <!-- PART A -->
         <div id="partA" class="active">
           <h2>Part A – Vocabulary Matching</h2>
+          <p class="partA-intro">
+            Match each term with the correct definition by selecting an option in the dropdown list.
+          </p>
+
           <ol>
-            <li>Budget
-        <select name="q1">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Forecast
-        <select name="q2">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>KPI (Key Performance Indicator)
-        <select name="q3">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Supplier
-        <select name="q4">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Headcount
-        <select name="q5">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Lead time
-        <select name="q6">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Inventory
-        <select name="q7">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Overhead
-        <select name="q8">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>Sustainability
-        <select name="q9">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
-<li>ROI (Return on Investment)
-        <select name="q10">
-          <option value="">-- Choose --</option><option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option><option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option><option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option><option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option><option>The total number of employees working in an organisation, department, or team.</option><option>The time between placing an order and receiving the product or service, including production and delivery.</option><option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option><option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option><option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option><option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
-        </select>
-      </li>
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Budget</span>
+                <select name="q1" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Forecast</span>
+                <select name="q2" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">KPI (Key Performance Indicator)</span>
+                <select name="q3" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Supplier</span>
+                <select name="q4" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Headcount</span>
+                <select name="q5" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Lead time</span>
+                <select name="q6" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Inventory</span>
+                <select name="q7" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Overhead</span>
+                <select name="q8" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">Sustainability</span>
+                <select name="q9" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
+
+            <li>
+              <div class="vocab-row">
+                <span class="vocab-term">ROI (Return on Investment)</span>
+                <select name="q10" class="vocab-select">
+                  <option value="">Select a definition</option>
+                  <option>A detailed financial plan that estimates how much money an organisation expects to earn and spend over a specific period.</option>
+                  <option>A prediction of future results (such as sales, costs, or profits) based on current data, trends, and assumptions.</option>
+                  <option>A measurable value that shows how effectively a company or team is achieving an important business objective.</option>
+                  <option>A company or person that provides goods or services to another company, usually as part of a commercial contract.</option>
+                  <option>The total number of employees working in an organisation, department, or team.</option>
+                  <option>The time between placing an order and receiving the product or service, including production and delivery.</option>
+                  <option>The stock of goods, materials, or products that a company holds for use in production or for sale to customers.</option>
+                  <option>The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.</option>
+                  <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
+                  <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
+                </select>
+              </div>
+            </li>
           </ol>
+
           <div class="btn-row right">
             <button type="button" id="toPartB">Next → Part B</button>
           </div>
