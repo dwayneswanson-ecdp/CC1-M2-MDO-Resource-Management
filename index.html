@@ -846,12 +846,6 @@ if (isSafari) {
     const confirmEmail = document.getElementById("confirmEmail");
     const confirmGroup = document.getElementById("confirmGroup"); // 👈 new
 
-    const startBtn = document.getElementById("startBtn");
-    const confirmBackBtn = document.getElementById("confirmBackBtn");
-    const confirmBeginBtn = document.getElementById("confirmBeginBtn");
-
-    const confirmName = document.getElementById("confirmName");
-    const confirmEmail = document.getElementById("confirmEmail");
 
        const partA = document.getElementById("partA");
     const partB = document.getElementById("partB");
@@ -1284,8 +1278,6 @@ if (examDeadline) {
           <em>This report was generated automatically for the English Exam – Business Resources.</em>
         </div>
       `;
-
-            const group = selectedGroup || groupNameField.value || EXAM_CONFIG.classLabel;
 
       const subject = EXAM_CONFIG.emailSubjectTemplate
         .replace("(NAME)", name)
