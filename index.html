@@ -637,50 +637,34 @@
 
 <script>
   // ----- Global configuration for this exam -----
-const EXAM_CONFIG = {
-  // Unique ID for this exam (used for localStorage keys etc.)
-  examId: "M2MD_CC1_2025",
+  const EXAM_CONFIG = {
+    examId: "M2MD_CC1_2025",
+    classCode: "BLANK",     // real class code
+    debugCode: "DEBUG",     // debug bypass
+    examTitleBase: "CC1 - English — Resource Management",
+    allowedGroups: ["M2 MDO G1", "M2 MDO G2", "M2 MDO G3"],
+    timeLimitMinutes: 60,
+    emailSubjectTemplate: "(NAME) CC1 - English - (GROUP)",
+    classLabel: "M2MDOG"
+  };
 
-  // Class code students must enter (shared for all groups)
-  classCode: "BLANK",
+  // ----- Global state -----
+  const DEADLINE_KEY = "examDeadline_" + EXAM_CONFIG.examId;
+  let examDeadline = null;
+  let timer = null;
+  let quill = null;
 
-  // Optional: special code that puts the exam in debug mode (future use)
-  debugCode: "DEBUG",
+  let isIOS = false;
+  let isMobile = false;
+  let isSafari = false;
 
-  // Base title without group – we will append "(M2 MDO G1 / G2 / G3)" dynamically
-  examTitleBase: "CC1 - English — Resource Management",
-
-  // If you want, just for reference
-  allowedGroups: ["M2 MDO G1", "M2 MDO G2", "M2 MDO G3"],
-
-  // Time limit in minutes
-  timeLimitMinutes: 60,
-
-  // Subject line template for the email you receive
-  // "(NAME)" → student's name, "(GROUP)" → selected group
-  emailSubjectTemplate: "(NAME) CC1 - English - (GROUP)",
-
-  // Label used in the report (we’ll override with the selected group)
-  classLabel: "M2MDOG" // fallback, not really used once groups are in place
-};
-// ----- Global exam timer + Quill state -----
-const DEADLINE_KEY = "examDeadline_" + EXAM_CONFIG.examId;
-let examDeadline = null;
-let timer = null;
-let quill = null;
-  // Browser / device flags – set inside DOMContentLoaded
-let isIOS = false;
-let isMobile = false;
-let isSafari = false;
- 
   let safeBlurUntil = 0;
+  function armSafeBlur(ms = 1200) {
+    safeBlurUntil = Date.now() + ms;
+  }
 
-function armSafeBlur(ms = 1200) {
-  safeBlurUntil = Date.now() + ms;
-}
-
-let selectedGroup = "";              // 👈 new
-let currentExamTitle = EXAM_CONFIG.examTitleBase; // 👈 new
+  let selectedGroup = "";
+  let currentExamTitle = EXAM_CONFIG.examTitleBase;
 
   // Restore deadline ONLY if still valid
   (function restoreDeadline() {
@@ -707,7 +691,7 @@ let currentExamTitle = EXAM_CONFIG.examTitleBase; // 👈 new
     q7: "The stock of goods, materials, or products that a company holds for use in production or for sale to customers.",
     q8: "The ongoing business expenses that are not directly linked to producing a specific product or service, such as rent, utilities, or administration.",
     q9: "Doing business in a way that meets current needs without harming the environment, society, or future generations.",
-    q10: "A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage."
+    q10:"A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage."
   };
 
   const wordNames = [
@@ -738,17 +722,16 @@ let currentExamTitle = EXAM_CONFIG.examTitleBase; // 👈 new
       }
     });
 
-    // Lock down copy/paste etc.
     const root = quill.root;
-        // ---------------------------------------------------------
-    // 4b — SAFE BLUR ARMING FOR QUILL EDITOR (iPhone keyboard)
-    // ---------------------------------------------------------
+
+    // Safe-blur for mobile keyboard
     ["focus", "click", "keydown"].forEach(evt => {
       root.addEventListener(evt, () => {
         if (isMobile) armSafeBlur(1500);
       });
     });
 
+    // Lock down copy/paste etc.
     root.addEventListener("contextmenu", e => e.preventDefault());
     root.addEventListener("paste", e => e.preventDefault());
     root.addEventListener("copy", e => e.preventDefault());
@@ -765,7 +748,7 @@ let currentExamTitle = EXAM_CONFIG.examTitleBase; // 👈 new
   function randomizeSelectsKeepFirst() {
     document.querySelectorAll("#partA select").forEach(sel => {
       const opts = Array.from(sel.options);
-      const first = opts.shift(); // "-- Choose --"
+      const first = opts.shift(); // "Select a definition"
       for (let i = opts.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [opts[i].text, opts[j].text] = [opts[j].text, opts[i].text];
@@ -791,617 +774,596 @@ let currentExamTitle = EXAM_CONFIG.examTitleBase; // 👈 new
     items.forEach(li => list.appendChild(li));
   }
 
-document.addEventListener("DOMContentLoaded", function() {
-  // ---- User agent / device flags ----
-  const ua = navigator.userAgent;
+  // ----- Main init -----
+  document.addEventListener("DOMContentLoaded", function () {
+    // ---- User agent / device flags ----
+    const ua = navigator.userAgent;
 
-  const isIOS =
-    /iPad|iPhone|iPod/.test(ua) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    isIOS =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-  const isMobile = /Mobi|Android/i.test(ua) || isIOS;
-  // Make it available to functions defined outside this block (like ensureQuill)
-  window.isMobile = isMobile;
+    isMobile = /Mobi|Android/i.test(ua) || isIOS;
 
-  // 🔹 Detect Safari (desktop & iOS) – block the exam on this browser
-  const isSafari = /^((?!chrome|crios|fxios|android).)*safari/i.test(ua);
+    isSafari = /^((?!chrome|crios|fxios|android).)*safari/i.test(ua);
 
-  if (isSafari) {
-    const main = document.querySelector("main");
-    if (main) {
-      main.innerHTML = `
-        <section class="card">
-          <h2 style="display:flex; align-items:center; gap:8px; margin-top:0;">
-            <span>⚠️</span>
-            <span>Navigateur non pris en charge</span>
-          </h2>
-          <p>
-            Pour des raisons techniques, cette épreuve en ligne n’est pas disponible sur
-            <strong>Safari</strong>.
-          </p>
-          <p>
-            Merci d’ouvrir ce lien dans l’un des navigateurs suivants&nbsp;:
-          </p>
-          <ul>
-            <li><strong>Google Chrome</strong></li>
-            <li><strong>Microsoft Edge</strong></li>
-            <li><strong>Mozilla Firefox</strong></li>
-          </ul>
-          <p class="muted">
-            Si vous voyez encore ce message alors que vous utilisez déjà l’un de ces navigateurs,
-            merci d’en informer immédiatement votre enseignant.
-          </p>
-        </section>
-      `;
-    }
-
-    const timer = document.getElementById("timer");
-    if (timer) {
-      timer.textContent = "";
-    }
-
-    // Stop all further exam initialisation on Safari
-    return;
-  }
-
-  // 🔻 Rest of the exam logic for supported browsers
-
-  if (window.emailjs) {
-    try {
-      emailjs.init({
-        publicKey: "Bb0oPYBiZGQcyIz5r",
-      });
-    } catch (e) {
-      console.error("EmailJS init error:", e);
-    }
-  }
-
-  // ----- DOM Elements -----
-  const login = document.getElementById("login");
-  const confirmSec = document.getElementById("confirm");
-  const exam = document.getElementById("exam");
-  const titleHeader = document.getElementById("examTitleHeader");
-
-  if (titleHeader) {
-    titleHeader.textContent = EXAM_CONFIG.examTitleBase; // base without group
-  }
-
-  const startBtn = document.getElementById("startBtn");
-  const confirmBackBtn = document.getElementById("confirmBackBtn");
-  const confirmBeginBtn = document.getElementById("confirmBeginBtn");
-
-  const confirmName = document.getElementById("confirmName");
-  const confirmEmail = document.getElementById("confirmEmail");
-  const confirmGroup = document.getElementById("confirmGroup");
-
-  const partA = document.getElementById("partA");
-  const partB = document.getElementById("partB");
-  const toPartA = document.getElementById("toPartA");
-  const toPartB = document.getElementById("toPartB");
-
-  const timerDisplay = document.getElementById("timer");
-  const form = document.getElementById("examForm");
-
-  const studentFirstNameInput = document.getElementById("studentFirstName");
-  const studentLastNameInput = document.getElementById("studentLastName");
-  const studentEmailInput = document.getElementById("studentEmail");
-  const classCodeInput = document.getElementById("classCode");
-  const groupSelect = document.getElementById("groupSelect");
-
-  // 4a — SAFE BLUR ARMING FOR PART A DROPDOWNS (iPad issue)
-  document.querySelectorAll("#partA select").forEach(sel => {
-    sel.addEventListener("mousedown", () => {
-      if (isMobile) armSafeBlur(1500);
-    });
-    sel.addEventListener("touchstart", () => {
-      if (isMobile) armSafeBlur(2000);
-    });
-  });
-
-  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
-
-  const studentNameField = document.getElementById("studentNameField");
-  const studentEmailField = document.getElementById("studentEmailField");
-  const classCodeField = document.getElementById("classCodeField");
-  const groupNameField = document.getElementById("groupNameField");
-
-  // Guard: if any required node is missing, stop (prevents runtime chaos)
-  const required = [
-    login, confirmSec, exam, startBtn, confirmBackBtn, confirmBeginBtn,
-    confirmName, confirmEmail, confirmGroup, partA, partB, toPartA, toPartB,
-    timerDisplay, form, studentFirstNameInput, studentLastNameInput,
-    studentEmailInput, classCodeInput, groupSelect
-  ];
-  if (required.some(n => !n)) {
-    console.error("Missing required DOM nodes. Check IDs.", { required });
-    return;
-  }
-
-// ----- State Flags -----
-let examSubmitted = false;
-let examActive = false;
-let isStartingExam = false;
-let exitPromptOpen = false; // NEW: avoid multiple popups
-
-function askToExitExam(reason) {
-  if (!examActive || exitPromptOpen) return;
-
-  exitPromptOpen = true;
-
-  const proceed = confirm(
-    reason ||
-    "Vous êtes sur le point de quitter le mode plein écran.\n\n" +
-    "Si vous continuez, votre épreuve sera effacée.\n\n" +
-    "Voulez-vous vraiment quitter ?"
-  );
-
-  exitPromptOpen = false;
-
-  if (proceed) {
-    // Same message you already use in terminateExam
-    terminateExam(
-      "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
-    );
-  } else {
-    // Try to go back to fullscreen so they can continue
-    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
-  }
-}
-
-  // ----- Helpers -----
-  function resetToLanding() {
-    console.log("🔄 resetToLanding called");
-
-    try {
-      clearInterval(timer);
-    } catch (e) {
-      console.error("Error clearing timer in resetToLanding:", e);
-    }
-
-    examActive = false;
-    examSubmitted = false;
-    isStartingExam = false;
-
-    if (form) form.reset();
-    if (quill) quill.setText("");
-
-    if (studentFirstNameInput) studentFirstNameInput.value = "";
-    if (studentLastNameInput) studentLastNameInput.value = "";
-    if (studentEmailInput) studentEmailInput.value = "";
-    if (classCodeInput) classCodeInput.value = "";
-    if (groupSelect) groupSelect.value = "";
-    selectedGroup = "";
-    currentExamTitle = EXAM_CONFIG.examTitleBase;
-
-    if (titleHeader) {
-      titleHeader.textContent = currentExamTitle;
-    }
-
-    // UI: show only login
-    login.style.display = "block";
-    confirmSec.style.display = "none";
-    exam.style.display = "none";
-
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Envoyer l'épreuve";
-    }
-
-    console.log("✅ Landing screen forced.");
-  }
-
-  function startTimer() {
-    clearInterval(timer);
-    timer = setInterval(() => {
-      if (!examDeadline) return;
-      const now = Date.now();
-      const remainingMs = examDeadline - now;
-      const totalSec = Math.max(0, Math.floor(remainingMs / 1000));
-      const m = Math.floor(totalSec / 60);
-      const s = totalSec % 60;
-      timerDisplay.textContent = `Time Remaining: ${m}:${s.toString().padStart(2, "0")}`;
-      if (remainingMs <= 0) {
-        clearInterval(timer);
-        submitExam(); // time is up
+    // 🔹 Block Safari completely
+    if (isSafari) {
+      const main = document.querySelector("main");
+      if (main) {
+        main.innerHTML = `
+          <section class="card">
+            <h2 style="display:flex; align-items:center; gap:8px; margin-top:0;">
+              <span>⚠️</span>
+              <span>Navigateur non pris en charge</span>
+            </h2>
+            <p>Pour des raisons techniques, cette épreuve en ligne n’est pas disponible sur <strong>Safari</strong>.</p>
+            <p>Merci d’ouvrir ce lien dans l’un des navigateurs suivants&nbsp;:</p>
+            <ul>
+              <li><strong>Google Chrome</strong></li>
+              <li><strong>Microsoft Edge</strong></li>
+              <li><strong>Mozilla Firefox</strong></li>
+            </ul>
+            <p class="muted">
+              Si vous voyez encore ce message alors que vous utilisez déjà l’un de ces navigateurs,
+              merci d’en informer immédiatement votre enseignant.
+            </p>
+          </section>
+        `;
       }
-    }, 1000);
-  }
 
-  function enableFullScreen() {
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(err => {
-        console.warn("Fullscreen request failed:", err);
-      });
-    }
-  }
-
-  function terminateExam(message) {
-    console.log("💣 terminateExam called", {
-      message,
-      examActiveBefore: examActive
-    });
-
-    if (!examActive) {
-      console.log("terminateExam called but examActive is already false – ignoring.");
-      return;
+      const timerEl = document.getElementById("timer");
+      if (timerEl) timerEl.textContent = "";
+      return; // stop everything else
     }
 
-    alert(
-      message ||
-      "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
-    );
-
-    resetToLanding();
-  }
-
-  // Force LAST NAME input uppercase
-  studentLastNameInput.addEventListener("input", () => {
-    studentLastNameInput.value = studentLastNameInput.value.toUpperCase();
-  });
-
-  // ----- Anti-cheat listeners -----
-  document.addEventListener("visibilitychange", () => {
-    if (isStartingExam) {
-      console.log("⏱ Ignoring visibilitychange during exam startup");
-      return;
-    }
-    if (examActive && document.hidden) {
-      terminateExam(
-        "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
-      );
-    }
-  });
-
-window.addEventListener("blur", () => {
-  if (isStartingExam) {
-    console.log("⏱ Ignoring blur during exam startup");
-    return;
-  }
-
-  if (!examActive) return;
-
-  // 📱 On mobile (iPhone/iPad/Android), ignore blur that happens
-  // right after we interacted with a select or the editor.
-  if (isMobile && Date.now() < safeBlurUntil) {
-    console.log("📱 Blur ignored (inside safe window)", {
-      now: Date.now(),
-      safeBlurUntil
-    });
-    return;
-  }
-
-   // Desktop or blur outside safe window → ask for confirmation
-  askToExitExam(
-    "Vous êtes sur le point de quitter la fenêtre de l'épreuve.\n\n" +
-    "Si vous continuez, votre épreuve sera effacée.\n\n" +
-    "Voulez-vous vraiment quitter ?"
-  );
-});
-  document.addEventListener("fullscreenchange", () => {
-    console.log("📺 fullscreenchange fired", {
-      examActive,
-      fullscreenElement: !!document.fullscreenElement,
-      isStartingExam
-    });
-
-    if (!examActive || isStartingExam) return;
-
-     if (!document.fullscreenElement) {
-    console.log("⛔ Leaving fullscreen while examActive → askToExitExam()");
-    askToExitExam(
-      "Vous êtes sur le point de quitter le mode plein écran.\n\n" +
-      "Si vous continuez, votre épreuve sera effacée.\n\n" +
-      "Voulez-vous vraiment quitter ?"
-    );
-  }
-});
-
-document.addEventListener("keydown", e => {
-  if ((e.key === "Escape" || e.key === "Esc") && examActive && !isStartingExam) {
-    e.preventDefault();
-    askToExitExam(
-      "Vous avez appuyé sur Échap, ce qui quitte le mode plein écran.\n\n" +
-      "Si vous continuez, votre épreuve sera effacée.\n\n" +
-      "Voulez-vous vraiment quitter ?"
-    );
-  }
-});
-
-  // Start from a clean landing state
-  resetToLanding();
-
-  // ----- Exam flow -----
-  function beginExam() {
-    const firstName = (studentFirstNameInput.value || "").trim();
-    const lastName = (studentLastNameInput.value || "").trim().toUpperCase();
-    const email = (studentEmailInput.value || "").trim();
-    const code = (classCodeInput.value || "").trim();
-    const group = selectedGroup || (groupSelect.value || "").trim();
-
-    const fullName = `${lastName} ${firstName}`;
-
-    studentNameField.value = fullName;
-    studentEmailField.value = email;
-    classCodeField.value = code;
-    groupNameField.value = group;
-
-    confirmSec.style.display = "none";
-    exam.style.display = "block";
-    partA.classList.add("active");
-    partB.classList.remove("active");
-
-    // Update dynamic exam title with group
-    currentExamTitle = `${EXAM_CONFIG.examTitleBase} (${group})`;
-    if (titleHeader) {
-      titleHeader.textContent = currentExamTitle;
-    }
-
-    // Mark exam active
-    examActive = true;
-
-    // Set or reuse deadline
-    if (!examDeadline) {
-      examDeadline = Date.now() + EXAM_CONFIG.timeLimitMinutes * 60 * 1000;
-      localStorage.setItem(DEADLINE_KEY, String(examDeadline));
-      console.log("⏱ New examDeadline set:", new Date(examDeadline).toISOString());
-    } else {
-      console.log("⏱ Using existing examDeadline:", new Date(examDeadline).toISOString());
-      if (Date.now() > examDeadline) {
-        alert("Le délai de 60 minutes est écoulé. Vous ne pouvez plus commencer l'épreuve.");
-        examActive = false;
-        exam.style.display = "none";
-        login.style.display = "block";
-        return;
-      }
-    }
-
-    isStartingExam = true;
-    setTimeout(() => {
-      isStartingExam = false;
-      console.log("⏱ Startup grace period over");
-    }, 1200);
-
-    enableFullScreen();
-    startTimer();
-    randomizeQuestionOrder();
-    randomizeSelectsKeepFirst();
-  }
-
-  // Start → Confirm
-  startBtn.addEventListener("click", () => {
-    const firstName = (studentFirstNameInput.value || "").trim();
-    const lastName = (studentLastNameInput.value || "").trim().toUpperCase();
-    const email = (studentEmailInput.value || "").trim();
-    const code = (classCodeInput.value || "").trim();
-    const group = (groupSelect.value || "").trim();
-
-    if (!firstName || !lastName || !email) {
-      alert("Merci de remplir toutes les informations (nom, prénom et e-mail).");
-      return;
-    }
-
-    if (!group) {
-      alert("Merci de sélectionner votre groupe.");
-      return;
-    }
-
-    const isDebug = code === EXAM_CONFIG.debugCode;
-    const isRealClass = code === EXAM_CONFIG.classCode;
-
-    if (!isDebug && !isRealClass) {
-      alert("Code de classe invalide.");
-      return;
-    }
-
-    const fullName = `${lastName} ${firstName}`;
-    selectedGroup = group;
-
-    confirmName.textContent = fullName;
-    confirmEmail.textContent = email;
-    confirmGroup.textContent = group;
-
-    login.style.display = "none";
-    confirmSec.style.display = "block";
-  });
-
-  confirmBackBtn.addEventListener("click", () => {
-    confirmSec.style.display = "none";
-    login.style.display = "block";
-  });
-
-  confirmBeginBtn.addEventListener("click", () => {
-    beginExam();
-  });
-
-  // Navigation Part A <-> Part B
-  toPartB.addEventListener("click", () => {
-    partA.classList.remove("active");
-    partB.classList.add("active");
-    ensureQuill();
-  });
-
-  toPartA.addEventListener("click", () => {
-    partB.classList.remove("active");
-    partA.classList.add("active");
-  });
-
-  // Submit handler
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    submitExam();
-  });
-
-  function submitExam() {
-    if (examSubmitted) return;
-    examSubmitted = true;
-
-    clearInterval(timer);
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Envoi en cours…";
-    }
-
-    const fd = new FormData(form);
-    const name = fd.get("studentName") || studentNameField.value;
-    const email = fd.get("studentEmail") || studentEmailField.value;
-
-    let minutesUsed = EXAM_CONFIG.timeLimitMinutes;
-    if (examDeadline) {
-      const remainingMs = examDeadline - Date.now();
-      const remainingMin = Math.max(0, Math.floor(remainingMs / 60000));
-      minutesUsed = EXAM_CONFIG.timeLimitMinutes - remainingMin;
-    }
-
-    const emailHtml = quill ? quill.root.innerHTML.trim() : "<em>(No response)</em>";
-    const totalQs = document.querySelectorAll('#partA select[name^="q"]').length || 10;
-
-    let scoreA = 0;
-    let partARowsHTML = "";
-    for (let i = 1; i <= totalQs; i++) {
-      const sel = fd.get("q" + i) || "No answer";
-      const corr = correctAnswers["q" + i] || "";
-      const ok = sel === corr;
-      if (ok) scoreA++;
-      const mark = ok ? "✅ Correct" : `❌ Incorrect → Correct answer: ${corr}`;
-      partARowsHTML += `
-        <tr>
-          <td style="padding:8px;border:1px solid #ccc;">${wordNames[i - 1] || ("Q" + i)}</td>
-          <td style="padding:8px;border:1px solid #ccc;">${sel}</td>
-          <td style="padding:8px;border:1px solid #ccc;color:${ok ? "green" : "#b00"};">${mark}</td>
-        </tr>`;
-    }
-
-    const partBScore = "___ / 10";
-    const finalNote = "___ / 20";
-
-    const group = selectedGroup || groupNameField.value || EXAM_CONFIG.classLabel;
-
-    const htmlReport = `
-      <h2 style="color:#004080;margin:0 0 8px 0;">
-        Results – ${currentExamTitle} – ${name}
-      </h2>
-      <table style="border-collapse:collapse;width:100%;max-width:640px;font-size:14px;margin:0 0 12px 0;">
-        <tr><td style="padding:4px 0;"><b>Student Name:</b> ${name}</td></tr>
-        <tr><td style="padding:4px 0;"><b>Student Email:</b> ${email}</td></tr>
-        <tr><td style="padding:4px 0;"><b>Group:</b> ${group}</td></tr>
-        <tr><td style="padding:4px 0;"><b>Time Taken:</b> ${minutesUsed} min</td></tr>
-      </table>
-      <hr style="border:none;border-top:1px solid #ddd;margin:14px 0;">
-
-      <h3 style="color:#004080;margin:10px 0 8px 0;">Part A – Vocabulary Matching</h3>
-      <table style="border-collapse:collapse;width:100%;font-size:15px;margin-top:8px;">
-        <thead>
-          <tr style="background:#004080;color:#fff;text-align:left;">
-            <th style="padding:8px;border:1px solid #ccc;">Word</th>
-            <th style="padding:8px;border:1px solid #ccc;">Student Answer</th>
-            <th style="padding:8px;border:1px solid #ccc;">Result</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${partARowsHTML}
-        </tbody>
-      </table>
-      <p style="margin:10px 0 0 0;"><b>Part A Score:</b> ${scoreA} / ${totalQs}</p>
-
-      <hr style="border:none;border-top:1px solid #ddd;margin:16px 0;">
-
-      <h3 style="color:#004080;margin:10px 0 8px 0;">Part B – Written Exercise</h3>
-      <div style="border:1px solid #ccc;border-radius:6px;padding:10px;background:#f9f9f9;">
-        ${emailHtml}
-      </div>
-
-      <table style="border-collapse:collapse;width:100%;font-size:15px;margin-top:6px;">
-        <thead>
-          <tr style="background:#004080;color:#fff;text-align:left;">
-            <th style="padding:8px;border:1px solid #ccc;">Criterion</th>
-            <th style="padding:8px;border:1px solid #ccc;">Maximum</th>
-            <th style="padding:8px;border:1px solid #ccc;">Awarded</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td style="padding:8px;border:1px solid #ccc;">Vocabulary Use</td><td style="padding:8px;border:1px solid #ccc;">/3</td><td style="padding:8px;border:1px solid #ccc;">___ / 3</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ccc;">Structure & Clarity</td><td style="padding:8px;border:1px solid #ccc;">/3</td><td style="padding:8px;border:1px solid #ccc;">___ / 3</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ccc;">Language Accuracy & Tone</td><td style="padding:8px;border:1px solid #ccc;">/2</td><td style="padding:8px;border:1px solid #ccc;">___ / 2</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ccc;">Professional Style</td><td style="padding:8px;border:1px solid #ccc;">/2</td><td style="padding:8px;border:1px solid #ccc;">___ / 2</td></tr>
-        </tbody>
-      </table>
-      <p style="margin:12px 0 6px 0;"><b>Instructor Comments:</b></p>
-      <div style="border:1px solid #ccc;border-radius:6px;padding:10px;background:#fdfdfd;min-height:48px;">
-        [Type feedback here]
-      </div>
-      <p style="margin:10px 0 0 0;"><b>Part B Score:</b> ${partBScore}</p>
-
-      <hr style="border:none;border-top:1px solid #ddd;margin:16px 0;">
-
-      <h4 style="color:#004080;margin:10px 0 8px 0;">Score Summary</h4>
-
-      <table style="border-collapse:collapse;width:100%;max-width:460px;font-size:15px;">
-        <tr>
-          <td style="padding:8px;border:1px solid #ccc;">Part A Score</td>
-          <td style="padding:8px;border:1px solid #ccc;">${scoreA} / ${totalQs}</td>
-        </tr>
-        <tr>
-          <td style="padding:8px;border:1px solid #ccc;">Part B Score</td>
-          <td style="padding:8px;border:1px solid #ccc;">${partBScore}</td>
-        </tr>
-        <tr>
-          <td style="padding:8px;border:1px solid #ccc;"><b>Final Note</b></td>
-          <td style="padding:8px;border:1px solid #ccc;"><b>${finalNote}</b></td>
-        </tr>
-      </table>
-
-      <div style="border-top:1px solid #ccc;margin-top:16px;padding-top:8px;font-size:12px;color:#555;">
-        <em>This report was generated automatically for the English Exam – Business Resources.</em>
-      </div>
-    `;
-
-    const subject = EXAM_CONFIG.emailSubjectTemplate
-      .replace("(NAME)", name)
-      .replace("(GROUP)", group);
-
+    // ----- EmailJS init -----
     if (window.emailjs) {
-      emailjs
-        .send(
-          "service_opm4h6b",
-          "template_r0u784p",
-          {
-            from_name: name,
-            from_email: email,
-            subject,
-            message_html: htmlReport
-          },
-          "Bb0oPYBiZGQcyIz5r"
-        )
-        .then(() => {
-          alert("✅ Épreuve envoyée avec succès.");
-          // Clean deadline and reset state
-          localStorage.removeItem(DEADLINE_KEY);
-          examDeadline = null;
-          resetToLanding();
-        })
-        .catch(err => {
-          alert(
-            "❌ Erreur lors de l'envoi de l'épreuve : " +
-            (err && err.text ? err.text : err)
-          );
-          console.error("EmailJS Error:", err);
-          examSubmitted = false;
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Envoyer l'épreuve";
-          }
-        });
-    } else {
-      alert("EmailJS n'est pas chargé ; envoi simulé.");
+      try {
+        emailjs.init({ publicKey: "Bb0oPYBiZGQcyIz5r" });
+      } catch (e) {
+        console.error("EmailJS init error:", e);
+      }
+    }
+
+    // ----- DOM Elements -----
+    const login = document.getElementById("login");
+    const confirmSec = document.getElementById("confirm");
+    const exam = document.getElementById("exam");
+    const titleHeader = document.getElementById("examTitleHeader");
+
+    if (titleHeader) {
+      titleHeader.textContent = EXAM_CONFIG.examTitleBase;
+    }
+
+    const startBtn = document.getElementById("startBtn");
+    const confirmBackBtn = document.getElementById("confirmBackBtn");
+    const confirmBeginBtn = document.getElementById("confirmBeginBtn");
+
+    const confirmName = document.getElementById("confirmName");
+    const confirmEmail = document.getElementById("confirmEmail");
+    const confirmGroup = document.getElementById("confirmGroup");
+
+    const partA = document.getElementById("partA");
+    const partB = document.getElementById("partB");
+    const toPartA = document.getElementById("toPartA");
+    const toPartB = document.getElementById("toPartB");
+
+    const timerDisplay = document.getElementById("timer");
+    const form = document.getElementById("examForm");
+
+    const studentFirstNameInput = document.getElementById("studentFirstName");
+    const studentLastNameInput = document.getElementById("studentLastName");
+    const studentEmailInput = document.getElementById("studentEmail");
+    const classCodeInput = document.getElementById("classCode");
+    const groupSelect = document.getElementById("groupSelect");
+
+    // Safe-blur arming on Part A dropdowns (iPad, etc.)
+    document.querySelectorAll("#partA select").forEach(sel => {
+      sel.addEventListener("mousedown", () => {
+        if (isMobile) armSafeBlur(1500);
+      });
+      sel.addEventListener("touchstart", () => {
+        if (isMobile) armSafeBlur(2000);
+      });
+    });
+
+    const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+
+    const studentNameField = document.getElementById("studentNameField");
+    const studentEmailField = document.getElementById("studentEmailField");
+    const classCodeField = document.getElementById("classCodeField");
+    const groupNameField = document.getElementById("groupNameField");
+
+    // Guard: if any required node is missing, stop
+    const required = [
+      login, confirmSec, exam, startBtn, confirmBackBtn, confirmBeginBtn,
+      confirmName, confirmEmail, confirmGroup, partA, partB, toPartA, toPartB,
+      timerDisplay, form, studentFirstNameInput, studentLastNameInput,
+      studentEmailInput, classCodeInput, groupSelect
+    ];
+    if (required.some(n => !n)) {
+      console.error("Missing required DOM nodes. Check IDs.", { required });
+      return;
+    }
+
+    // ----- State flags -----
+    let examSubmitted = false;
+    let examActive = false;
+    let isStartingExam = false;
+    let exitPromptOpen = false; // avoid multiple popups
+
+    function askToExitExam(reason) {
+      if (!examActive || exitPromptOpen) return;
+
+      exitPromptOpen = true;
+
+      const proceed = confirm(
+        reason ||
+        "Vous êtes sur le point de quitter le mode plein écran.\n\n" +
+        "Si vous continuez, votre épreuve sera effacée.\n\n" +
+        "Voulez-vous vraiment quitter l’épreuve ?"
+      );
+
+      exitPromptOpen = false;
+
+      if (proceed) {
+        terminateExam(
+          "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
+        );
+      } else {
+        // Try to go back to fullscreen so they can continue
+        if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
+      }
+    }
+
+    // ----- Helpers -----
+    function resetToLanding() {
+      console.log("🔄 resetToLanding called");
+
+      try {
+        clearInterval(timer);
+      } catch (e) {
+        console.error("Error clearing timer in resetToLanding:", e);
+      }
+
+      examActive = false;
       examSubmitted = false;
+      isStartingExam = false;
+
+      if (form) form.reset();
+      if (quill) quill.setText("");
+
+      studentFirstNameInput.value = "";
+      studentLastNameInput.value = "";
+      studentEmailInput.value = "";
+      classCodeInput.value = "";
+      groupSelect.value = "";
+      selectedGroup = "";
+      currentExamTitle = EXAM_CONFIG.examTitleBase;
+
+      if (titleHeader) {
+        titleHeader.textContent = currentExamTitle;
+      }
+
+      login.style.display = "block";
+      confirmSec.style.display = "none";
+      exam.style.display = "none";
+
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = "Envoyer l'épreuve";
       }
+
+      console.log("✅ Landing screen forced.");
     }
-  }
-});
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (!examDeadline) return;
+        const now = Date.now();
+        const remainingMs = examDeadline - now;
+        const totalSec = Math.max(0, Math.floor(remainingMs / 1000));
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        timerDisplay.textContent = `Time Remaining: ${m}:${s.toString().padStart(2, "0")}`;
+        if (remainingMs <= 0) {
+          clearInterval(timer);
+          submitExam(); // time is up
+        }
+      }, 1000);
+    }
+
+    function enableFullScreen() {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn("Fullscreen request failed:", err);
+        });
+      }
+    }
+
+    function terminateExam(message) {
+      console.log("💣 terminateExam called", {
+        message,
+        examActiveBefore: examActive
+      });
+
+      if (!examActive) {
+        console.log("terminateExam called but examActive is already false – ignoring.");
+        return;
+      }
+
+      alert(
+        message ||
+        "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
+      );
+
+      resetToLanding();
+    }
+
+    // Force LAST NAME input uppercase
+    studentLastNameInput.addEventListener("input", () => {
+      studentLastNameInput.value = studentLastNameInput.value.toUpperCase();
+    });
+
+    // ----- Anti-cheat listeners -----
+    document.addEventListener("visibilitychange", () => {
+      if (isStartingExam) {
+        console.log("⏱ Ignoring visibilitychange during exam startup");
+        return;
+      }
+      if (examActive && document.hidden) {
+        askToExitExam(
+          "Vous êtes sur le point de quitter la fenêtre de l'épreuve.\n\n" +
+          "Si vous continuez, votre épreuve sera effacée.\n\n" +
+          "Voulez-vous vraiment quitter l’épreuve ?"
+        );
+      }
+    });
+
+    window.addEventListener("blur", () => {
+      if (isStartingExam) {
+        console.log("⏱ Ignoring blur during exam startup");
+        return;
+      }
+
+      if (!examActive) return;
+
+      if (isMobile && Date.now() < safeBlurUntil) {
+        console.log("📱 Blur ignored (inside safe window)", {
+          now: Date.now(),
+          safeBlurUntil
+        });
+        return;
+      }
+
+      askToExitExam(
+        "Vous êtes sur le point de quitter la fenêtre de l'épreuve.\n\n" +
+        "Si vous continuez, votre épreuve sera effacée.\n\n" +
+        "Voulez-vous vraiment quitter l’épreuve ?"
+      );
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      console.log("📺 fullscreenchange fired", {
+        examActive,
+        fullscreenElement: !!document.fullscreenElement,
+        isStartingExam
+      });
+
+      if (!examActive || isStartingExam) return;
+
+      if (!document.fullscreenElement) {
+        askToExitExam(
+          "Vous êtes sur le point de quitter le mode plein écran.\n\n" +
+          "Si vous continuez, votre épreuve sera effacée.\n\n" +
+          "Voulez-vous vraiment quitter l’épreuve ?"
+        );
+      }
+    });
+
+    document.addEventListener("keydown", e => {
+      if ((e.key === "Escape" || e.key === "Esc") && examActive && !isStartingExam) {
+        e.preventDefault();
+        askToExitExam(
+          "Vous avez appuyé sur Échap, ce qui quitte le mode plein écran.\n\n" +
+          "Si vous continuez, votre épreuve sera effacée.\n\n" +
+          "Voulez-vous vraiment quitter l’épreuve ?"
+        );
+      }
+    });
+
+    // Start from a clean landing state
+    resetToLanding();
+
+    // ----- Exam flow -----
+    function beginExam() {
+      const firstName = (studentFirstNameInput.value || "").trim();
+      const lastName = (studentLastNameInput.value || "").trim().toUpperCase();
+      const email = (studentEmailInput.value || "").trim();
+      const code = (classCodeInput.value || "").trim();
+      const group = selectedGroup || (groupSelect.value || "").trim();
+
+      const fullName = `${lastName} ${firstName}`;
+
+      studentNameField.value = fullName;
+      studentEmailField.value = email;
+      classCodeField.value = code;
+      groupNameField.value = group;
+
+      confirmSec.style.display = "none";
+      exam.style.display = "block";
+      partA.classList.add("active");
+      partB.classList.remove("active");
+
+      currentExamTitle = `${EXAM_CONFIG.examTitleBase} (${group})`;
+      if (titleHeader) {
+        titleHeader.textContent = currentExamTitle;
+      }
+
+      examActive = true;
+
+      if (!examDeadline) {
+        examDeadline = Date.now() + EXAM_CONFIG.timeLimitMinutes * 60 * 1000;
+        localStorage.setItem(DEADLINE_KEY, String(examDeadline));
+        console.log("⏱ New examDeadline set:", new Date(examDeadline).toISOString());
+      } else {
+        console.log("⏱ Using existing examDeadline:", new Date(examDeadline).toISOString());
+        if (Date.now() > examDeadline) {
+          alert("Le délai de 60 minutes est écoulé. Vous ne pouvez plus commencer l'épreuve.");
+          examActive = false;
+          exam.style.display = "none";
+          login.style.display = "block";
+          return;
+        }
+      }
+
+      isStartingExam = true;
+      setTimeout(() => {
+        isStartingExam = false;
+        console.log("⏱ Startup grace period over");
+      }, 1200);
+
+      enableFullScreen();
+      startTimer();
+      randomizeQuestionOrder();
+      randomizeSelectsKeepFirst();
+    }
+
+    // Start → Confirm
+    startBtn.addEventListener("click", () => {
+      const firstName = (studentFirstNameInput.value || "").trim();
+      const lastName = (studentLastNameInput.value || "").trim().toUpperCase();
+      const email = (studentEmailInput.value || "").trim();
+      const code = (classCodeInput.value || "").trim();
+      const group = (groupSelect.value || "").trim();
+
+      if (!firstName || !lastName || !email) {
+        alert("Merci de remplir toutes les informations (nom, prénom et e-mail).");
+        return;
+      }
+
+      if (!group) {
+        alert("Merci de sélectionner votre groupe.");
+        return;
+      }
+
+      const isDebug = code === EXAM_CONFIG.debugCode;
+      const isRealClass = code === EXAM_CONFIG.classCode;
+
+      if (!isDebug && !isRealClass) {
+        alert("Code de classe invalide.");
+        return;
+      }
+
+      const fullName = `${lastName} ${firstName}`;
+      selectedGroup = group;
+
+      confirmName.textContent = fullName;
+      confirmEmail.textContent = email;
+      confirmGroup.textContent = group;
+
+      login.style.display = "none";
+      confirmSec.style.display = "block";
+    });
+
+    confirmBackBtn.addEventListener("click", () => {
+      confirmSec.style.display = "none";
+      login.style.display = "block";
+    });
+
+    confirmBeginBtn.addEventListener("click", () => {
+      beginExam();
+    });
+
+    // Navigation Part A <-> Part B
+    toPartB.addEventListener("click", () => {
+      partA.classList.remove("active");
+      partB.classList.add("active");
+      ensureQuill();
+    });
+
+    toPartA.addEventListener("click", () => {
+      partB.classList.remove("active");
+      partA.classList.add("active");
+    });
+
+    // Submit handler
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      submitExam();
+    });
+
+    function submitExam() {
+      if (examSubmitted) return;
+      examSubmitted = true;
+
+      clearInterval(timer);
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Envoi en cours…";
+      }
+
+      const fd = new FormData(form);
+      const name = fd.get("studentName") || studentNameField.value;
+      const email = fd.get("studentEmail") || studentEmailField.value;
+
+      let minutesUsed = EXAM_CONFIG.timeLimitMinutes;
+      if (examDeadline) {
+        const remainingMs = examDeadline - Date.now();
+        const remainingMin = Math.max(0, Math.floor(remainingMs / 60000));
+        minutesUsed = EXAM_CONFIG.timeLimitMinutes - remainingMin;
+      }
+
+      const emailHtml = quill ? quill.root.innerHTML.trim() : "<em>(No response)</em>";
+      const totalQs = document.querySelectorAll('#partA select[name^="q"]').length || 10;
+
+      let scoreA = 0;
+      let partARowsHTML = "";
+      for (let i = 1; i <= totalQs; i++) {
+        const sel = fd.get("q" + i) || "No answer";
+        const corr = correctAnswers["q" + i] || "";
+        const ok = sel === corr;
+        if (ok) scoreA++;
+        const mark = ok ? "✅ Correct" : `❌ Incorrect → Correct answer: ${corr}`;
+        partARowsHTML += `
+          <tr>
+            <td style="padding:8px;border:1px solid #ccc;">${wordNames[i - 1] || ("Q" + i)}</td>
+            <td style="padding:8px;border:1px solid #ccc;">${sel}</td>
+            <td style="padding:8px;border:1px solid #ccc;color:${ok ? "green" : "#b00"};">${mark}</td>
+          </tr>`;
+      }
+
+      const partBScore = "___ / 10";
+      const finalNote = "___ / 20";
+      const group = selectedGroup || groupNameField.value || EXAM_CONFIG.classLabel;
+
+      const htmlReport = `
+        <h2 style="color:#004080;margin:0 0 8px 0;">
+          Results – ${currentExamTitle} – ${name}
+        </h2>
+        <table style="border-collapse:collapse;width:100%;max-width:640px;font-size:14px;margin:0 0 12px 0;">
+          <tr><td style="padding:4px 0;"><b>Student Name:</b> ${name}</td></tr>
+          <tr><td style="padding:4px 0;"><b>Student Email:</b> ${email}</td></tr>
+          <tr><td style="padding:4px 0;"><b>Group:</b> ${group}</td></tr>
+          <tr><td style="padding:4px 0;"><b>Time Taken:</b> ${minutesUsed} min</td></tr>
+        </table>
+        <hr style="border:none;border-top:1px solid #ddd;margin:14px 0;">
+
+        <h3 style="color:#004080;margin:10px 0 8px 0;">Part A – Vocabulary Matching</h3>
+        <table style="border-collapse:collapse;width:100%;font-size:15px;margin-top:8px;">
+          <thead>
+            <tr style="background:#004080;color:#fff;text-align:left;">
+              <th style="padding:8px;border:1px solid #ccc;">Word</th>
+              <th style="padding:8px;border:1px solid #ccc;">Student Answer</th>
+              <th style="padding:8px;border:1px solid #ccc;">Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${partARowsHTML}
+          </tbody>
+        </table>
+        <p style="margin:10px 0 0 0;"><b>Part A Score:</b> ${scoreA} / ${totalQs}</p>
+
+        <hr style="border:none;border-top:1px solid #ddd;margin:16px 0;">
+
+        <h3 style="color:#004080;margin:10px 0 8px 0;">Part B – Written Exercise</h3>
+        <div style="border:1px solid #ccc;border-radius:6px;padding:10px;background:#f9f9f9;">
+          ${emailHtml}
+        </div>
+
+        <table style="border-collapse:collapse;width:100%;font-size:15px;margin-top:6px;">
+          <thead>
+            <tr style="background:#004080;color:#fff;text-align:left;">
+              <th style="padding:8px;border:1px solid #ccc;">Criterion</th>
+              <th style="padding:8px;border:1px solid #ccc;">Maximum</th>
+              <th style="padding:8px;border:1px solid #ccc;">Awarded</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px;border:1px solid #ccc;">Vocabulary Use</td><td style="padding:8px;border:1px solid #ccc;">/3</td><td style="padding:8px;border:1px solid #ccc;">___ / 3</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ccc;">Structure & Clarity</td><td style="padding:8px;border:1px solid #ccc;">/3</td><td style="padding:8px;border:1px solid #ccc;">___ / 3</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ccc;">Language Accuracy & Tone</td><td style="padding:8px;border:1px solid #ccc;">/2</td><td style="padding:8px;border:1px solid #ccc;">___ / 2</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ccc;">Professional Style</td><td style="padding:8px;border:1px solid #ccc;">/2</td><td style="padding:8px;border:1px solid #ccc;">___ / 2</td></tr>
+          </tbody>
+        </table>
+        <p style="margin:12px 0 6px 0;"><b>Instructor Comments:</b></p>
+        <div style="border:1px solid #ccc;border-radius:6px;padding:10px;background:#fdfdfd;min-height:48px;">
+          [Type feedback here]
+        </div>
+        <p style="margin:10px 0 0 0;"><b>Part B Score:</b> ${partBScore}</p>
+
+        <hr style="border:none;border-top:1px solid #ddd;margin:16px 0;">
+
+        <h4 style="color:#004080;margin:10px 0 8px 0;">Score Summary</h4>
+
+        <table style="border-collapse:collapse;width:100%;max-width:460px;font-size:15px;">
+          <tr>
+            <td style="padding:8px;border:1px solid #ccc;">Part A Score</td>
+            <td style="padding:8px;border:1px solid #ccc;">${scoreA} / ${totalQs}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #ccc;">Part B Score</td>
+            <td style="padding:8px;border:1px solid #ccc;">${partBScore}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #ccc;"><b>Final Note</b></td>
+            <td style="padding:8px;border:1px solid #ccc;"><b>${finalNote}</b></td>
+          </tr>
+        </table>
+
+        <div style="border-top:1px solid #ccc;margin-top:16px;padding-top:8px;font-size:12px;color:#555;">
+          <em>This report was generated automatically for the English Exam – Business Resources.</em>
+        </div>
+      `;
+
+      const subject = EXAM_CONFIG.emailSubjectTemplate
+        .replace("(NAME)", name)
+        .replace("(GROUP)", group);
+
+      if (window.emailjs) {
+        emailjs
+          .send(
+            "service_opm4h6b",
+            "template_r0u784p",
+            {
+              from_name: name,
+              from_email: email,
+              subject,
+              message_html: htmlReport
+            },
+            "Bb0oPYBiZGQcyIz5r"
+          )
+          .then(() => {
+            alert("✅ Épreuve envoyée avec succès.");
+            localStorage.removeItem(DEADLINE_KEY);
+            examDeadline = null;
+            resetToLanding();
+          })
+          .catch(err => {
+            alert(
+              "❌ Erreur lors de l'envoi de l'épreuve : " +
+              (err && err.text ? err.text : err)
+            );
+            console.error("EmailJS Error:", err);
+            examSubmitted = false;
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Envoyer l'épreuve";
+            }
+          });
+      } else {
+        alert("EmailJS n'est pas chargé ; envoi simulé.");
+        examSubmitted = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Envoyer l'épreuve";
+        }
+      }
+    }
+  });
 </script>
