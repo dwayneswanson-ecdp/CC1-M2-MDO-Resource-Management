@@ -917,10 +917,38 @@ document.addEventListener("DOMContentLoaded", function() {
     return;
   }
 
-  // ----- State Flags -----
-  let examSubmitted = false;
-  let examActive = false;
-  let isStartingExam = false;
+// ----- State Flags -----
+let examSubmitted = false;
+let examActive = false;
+let isStartingExam = false;
+let exitPromptOpen = false; // NEW: avoid multiple popups
+
+function askToExitExam(reason) {
+  if (!examActive || exitPromptOpen) return;
+
+  exitPromptOpen = true;
+
+  const proceed = confirm(
+    reason ||
+    "Vous êtes sur le point de quitter le mode plein écran.\n\n" +
+    "Si vous continuez, votre épreuve sera effacée.\n\n" +
+    "Voulez-vous vraiment quitter ?"
+  );
+
+  exitPromptOpen = false;
+
+  if (proceed) {
+    // Same message you already use in terminateExam
+    terminateExam(
+      "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
+    );
+  } else {
+    // Try to go back to fullscreen so they can continue
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  }
+}
 
   // ----- Helpers -----
   function resetToLanding() {
@@ -1026,29 +1054,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  window.addEventListener("blur", () => {
-    if (isStartingExam) {
-      console.log("⏱ Ignoring blur during exam startup");
-      return;
-    }
+window.addEventListener("blur", () => {
+  if (isStartingExam) {
+    console.log("⏱ Ignoring blur during exam startup");
+    return;
+  }
 
-    if (!examActive) return;
+  if (!examActive) return;
 
-    // 📱 On mobile, ignore blur that happens right after select/editor interaction
-    if (isMobile && Date.now() < safeBlurUntil) {
-      console.log("📱 Blur ignored (inside safe window)", {
-        now: Date.now(),
-        safeBlurUntil
-      });
-      return;
-    }
+  // 📱 On mobile (iPhone/iPad/Android), ignore blur that happens
+  // right after we interacted with a select or the editor.
+  if (isMobile && Date.now() < safeBlurUntil) {
+    console.log("📱 Blur ignored (inside safe window)", {
+      now: Date.now(),
+      safeBlurUntil
+    });
+    return;
+  }
 
-    // Desktop or blur outside safe window → terminate
-    terminateExam(
-      "Vous avez quitté la fenêtre de l'épreuve. L'épreuve est terminée et doit être recommencée."
-    );
-  });
-
+   // Desktop or blur outside safe window → ask for confirmation
+  askToExitExam(
+    "Vous êtes sur le point de quitter la fenêtre de l'épreuve.\n\n" +
+    "Si vous continuez, votre épreuve sera effacée.\n\n" +
+    "Voulez-vous vraiment quitter ?"
+  );
+});
   document.addEventListener("fullscreenchange", () => {
     console.log("📺 fullscreenchange fired", {
       examActive,
@@ -1058,22 +1088,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (!examActive || isStartingExam) return;
 
-    if (!document.fullscreenElement) {
-      console.log("⛔ Leaving fullscreen while examActive → terminateExam()");
-      terminateExam(
-        "Vous avez quitté le mode plein écran. L'épreuve est terminée et doit être recommencée."
-      );
-    }
-  });
+     if (!document.fullscreenElement) {
+    console.log("⛔ Leaving fullscreen while examActive → askToExitExam()");
+    askToExitExam(
+      "Vous êtes sur le point de quitter le mode plein écran.\n\n" +
+      "Si vous continuez, votre épreuve sera effacée.\n\n" +
+      "Voulez-vous vraiment quitter ?"
+    );
+  }
+});
 
-  document.addEventListener("keydown", e => {
-    if ((e.key === "Escape" || e.key === "Esc") && examActive && !isStartingExam) {
-      e.preventDefault();
-      terminateExam(
-        "Vous avez quitté le mode plein écran ou appuyé sur Échap. L'épreuve est terminée et doit être recommencée."
-      );
-    }
-  });
+document.addEventListener("keydown", e => {
+  if ((e.key === "Escape" || e.key === "Esc") && examActive && !isStartingExam) {
+    e.preventDefault();
+    askToExitExam(
+      "Vous avez appuyé sur Échap, ce qui quitte le mode plein écran.\n\n" +
+      "Si vous continuez, votre épreuve sera effacée.\n\n" +
+      "Voulez-vous vraiment quitter ?"
+    );
+  }
+});
 
   // Start from a clean landing state
   resetToLanding();
