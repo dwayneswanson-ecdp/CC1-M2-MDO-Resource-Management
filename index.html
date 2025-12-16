@@ -691,6 +691,17 @@
       <h2 style="margin:0 0 8px 0; font-size:1rem; color:#111827;">
         Quitter l’épreuve ?
       </h2>
+          <div id="exitOverlayStrike" style="
+      margin:4px 0 6px 0;
+      font-size:1.5rem;
+      font-weight:700;
+      color:#b91c1c;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      text-align:left;
+    ">
+      <!-- Filled dynamically, e.g. AVERTISSEMENT 1 / 2 -->
+    </div>
       <p id="exitOverlayMessage" style="margin:0 0 8px 0; font-size:0.9rem; color:#4b5563;">
         Vous êtes sur le point de quitter l’écran de l’épreuve.
         Si vous continuez, votre épreuve sera effacée.
@@ -763,10 +774,11 @@
     let safeBlurUntil = 0;
 
     // NEW: anti-cheat counters + countdown
-    let violationCount = 0;
-    const MAX_VIOLATIONS = 3;   // on the 3rd event → auto-submit
-    let exitCountdownTimer = null;
-    let exitSecondsRemaining = 0;
+     let violationCount = 0;
+  const MAX_VIOLATIONS = 3;         // 3rd event = auto-submit
+  const MAX_WARNINGS = MAX_VIOLATIONS - 1; // 1 and 2 show popup
+  let exitCountdownTimer = null;
+  let exitSecondsRemaining = 0;
 
     let selectedGroup = "";
     let currentExamTitle = EXAM_CONFIG.examTitleBase;
@@ -989,7 +1001,7 @@ document.addEventListener("contextmenu", function (e) {
       const exitOverlayLeave = document.getElementById("exitOverlayLeave");
       const exitOverlayCountdownText = document.getElementById("exitOverlayCountdownText");
       const exitOverlayCountdownDigits = document.getElementById("exitOverlayCountdownDigits");
-
+    const exitOverlayStrike = document.getElementById("exitOverlayStrike");
       // Translation sentinel – detects if the page text was auto-translated
 const langSentinel = document.getElementById("langSentinel");
 const langSentinelBaseline = langSentinel
@@ -1194,6 +1206,11 @@ if (langSentinel && langSentinelBaseline) {
         if (Date.now() < antiCheatSuspendedUntil) return;
 
         violationCount += 1;
+              // Update big warning counter: AVERTISSEMENT X / 2
+      if (exitOverlayStrike) {
+        const warnIndex = Math.min(violationCount, MAX_WARNINGS);
+        exitOverlayStrike.textContent = `AVERTISSEMENT ${warnIndex} / ${MAX_WARNINGS}`;
+      }
 
         const msgBase =
           reason ||
