@@ -906,7 +906,7 @@
       });
     }
 
-    function initDefinitionPreviews() {
+function initDefinitionPreviews() {
   document.querySelectorAll('#partA select').forEach(sel => {
     const name = sel.name; // e.g. "q1"
     const preview = document.querySelector(
@@ -917,12 +917,20 @@
     const update = () => {
       const opt = sel.options[sel.selectedIndex];
       const text = opt ? opt.text : "";
-      preview.textContent = text || "";
-      // Full definition as tooltip on the select (desktop)
-      sel.title = text || "";
+
+      // If it's the placeholder (first option), show nothing
+      if (!opt || sel.selectedIndex === 0) {
+        preview.textContent = "";
+        sel.title = "";
+        return;
+      }
+
+      // Otherwise, show the full definition under the dropdown
+      preview.textContent = text;
+      sel.title = text; // tooltip on hover (desktop)
     };
 
-    sel.addEventListener('change', update);
+    sel.addEventListener("change", update);
     // Initial state
     update();
   });
@@ -1564,9 +1572,10 @@ if (langSentinel && langSentinelBaseline) {
         }, 1200);
 
         enableFullScreen();
-        startTimer();
-        randomizeQuestionOrder();
-        randomizeSelectsKeepFirst();
+startTimer();
+randomizeQuestionOrder();
+randomizeSelectsKeepFirst();
+initDefinitionPreviews();   // 👈 add this line
       }
 
       // Start → Confirm
