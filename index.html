@@ -10,6 +10,11 @@
 
   <!-- Quill CSS -->
   <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+  
+  <!-- Google Fonts - Inter for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* Anti-copy / anti-translate behaviour – leave as is for exam security */
@@ -23,18 +28,22 @@
     }
     * { translate: none !important; }
 
-  
-    /* Global body */
+    /* ============================================
+       MODERN UI UPGRADE - Matching Landing Page
+       ============================================ */
+    
+    /* Global body with modern font */
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
-      background: #f5f7fb;
-      color: #222;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #f8f9fc;
+      color: #1e293b;
       font-size: 16px;
-      line-height: 1.6;
-      padding-top: 90px; /* space for fixed header (adjust if needed) */
+      line-height: 1.7;
+      padding-top: 85px;
+      font-weight: 400;
     }
 
-    /* Fixed exam header – now visually closer to the new site navbar */
+    /* Modern fixed header with glassmorphism */
     header {
       position: fixed;
       top: 0;
@@ -45,76 +54,94 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+      gap: 1.5rem;
 
-      background: #ffffffcc;              /* light, slightly transparent */
-      backdrop-filter: blur(10px);
-      color: #111827;
-      padding: 14px 24px;
-      border-bottom: 1px solid #e1e4f0;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      color: #1e293b;
+      padding: 18px 32px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
     }
 
     header h1 {
       margin: 0;
-      font-size: 1.2rem;
-      letter-spacing: 0.03em;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
       font-weight: 700;
-      color: #2643e9; /* same blue accent as the new page */
+      color: #2563eb;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-/* Timer on the right */
-#timer {
-  display: none;           /* 🔹 Hidden by default on landing/home */
-  font-weight: 700;
-  font-size: 1.05rem;
-  text-align: right;
-  padding: 8px 18px;
-  border-radius: 999px;
-  border: 1px solid #111827;
-  background: #111827;     /* dark pill */
-  color: #f9fafb;          /* light text */
-  white-space: nowrap;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
-}
+    /* Modern timer with gradient background */
+    #timer {
+      display: none;
+      font-weight: 700;
+      font-size: 1rem;
+      text-align: right;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 2px solid #2563eb;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      letter-spacing: 0.02em;
+      transition: all 0.3s ease;
+    }
 
-    /* Main exam wrapper */
+    /* Main exam wrapper with better spacing */
     main {
-      max-width: 900px;
-      margin: 24px auto 40px;
+      max-width: 960px;
+      margin: 32px auto 60px;
       background: #ffffff;
-      padding: 32px 32px 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      padding: 48px 48px 56px;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(226, 232, 240, 0.8);
     }
 
-    /* Reusable inner cards (e.g. intro screen, confirmation, parts) */
+    /* Modern card style matching landing page */
     .card {
       background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.06);
-      padding: 28px 28px 32px;
-      max-width: 640px;
-      margin: 32px auto;
+      border-radius: 20px;
+      box-shadow: 0 6px 30px rgba(15, 23, 42, 0.08);
+      padding: 40px 40px 48px;
+      max-width: 680px;
+      margin: 40px auto;
       text-align: left;
-      border: 1px solid #e5e7eb;
+      border: 1px solid rgba(226, 232, 240, 0.8);
     }
 
     .card h2 {
-      color: #111827;
+      color: #0f172a;
       margin-top: 0;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       text-align: center;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
     }
 
+    .card p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #475569;
+    }
+
+    /* Modern form elements */
     label {
       display: block;
-      margin: 12px 0 8px;
-      font-weight: bold;
+      margin: 20px 0 10px;
+      font-weight: 600;
       font-size: 0.95rem;
-      color: #111827;
+      color: #0f172a;
+      letter-spacing: -0.01em;
     }
 
     input[type="text"],
@@ -122,66 +149,104 @@
     select,
     textarea {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
       font-size: 0.95rem;
-      font-family: inherit;
+      font-family: 'Inter', inherit;
       box-sizing: border-box;
       background: #ffffff;
+      color: #1e293b;
+      transition: all 0.2s ease;
+      font-weight: 400;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 100px;
+      line-height: 1.6;
     }
 
     select {
       white-space: normal;
       word-wrap: break-word;
-      padding: 8px;
+      padding: 12px 16px;
       background: #ffffff;
+      cursor: pointer;
     }
 
+    /* Modern button styles */
     button {
-      background: #2643e9;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: #fff;
       border: none;
-      padding: 10px 24px;
+      padding: 14px 32px;
       border-radius: 999px;
       cursor: pointer;
       font-size: 0.95rem;
       font-weight: 600;
-      font-family: inherit;
+      font-family: 'Inter', inherit;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+      transition: all 0.3s ease;
+      letter-spacing: 0.01em;
     }
+    
     button:hover {
-      filter: brightness(0.96);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     .btn-row {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       flex-wrap: wrap;
-      margin-top: 16px;
+      margin-top: 24px;
     }
     .btn-row.center { justify-content: center; }
     .btn-row.right { justify-content: flex-end; }
 
     .btn-light {
-      background: #eef2ff;
-      color: #2643e9;
-      border: 1px solid #c7d2fe;
+      background: #f1f5f9;
+      color: #2563eb;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     }
     .btn-light:hover {
-      background: #e0e7ff;
+      background: #e2e8f0;
+      border-color: #cbd5e1;
     }
 
-    ol {
-      padding-left: 20px;
+    /* Improved list styling */
+    ol, ul {
+      padding-left: 24px;
+      margin: 16px 0;
     }
-    ol li {
+    
+    ol li, ul li {
       margin-bottom: 14px;
       font-size: 0.95rem;
+      line-height: 1.7;
+      color: #475569;
+    }
+
+    /* Horizontal rules */
+    hr {
+      margin: 28px 0;
+      border: none;
+      border-top: 2px solid #f1f5f9;
     }
 
     /* STEP / PART VISIBILITY – functional: do NOT change selectors */
@@ -196,45 +261,57 @@
       display: block;
     }
 
-    /* Quill editor container – visually aligned with card style */
+    /* Modern Quill editor */
     .editor-card {
-      border: 1px solid #e3e6ee;
-      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
-      margin-top: 12px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      margin-top: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .editor-card:focus-within {
+      border-color: #2563eb;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.12);
     }
 
     .ql-toolbar.ql-snow {
       border: none;
-      border-bottom: 1px solid #e3e6ee;
-      background: #f9fbff;
+      border-bottom: 2px solid #f1f5f9;
+      background: #f8f9fc;
+      padding: 12px;
     }
 
     .ql-container.ql-snow {
       border: none;
-      min-height: 260px;
+      min-height: 300px;
       background: #ffffff;
     }
 
     .ql-editor {
-      min-height: 240px;
+      min-height: 280px;
       font-size: 0.95rem;
+      font-family: 'Inter', inherit;
+      line-height: 1.7;
+      padding: 20px;
     }
 
     .muted {
-      color: #6b7280;
+      color: #64748b;
       font-size: 0.9rem;
+      line-height: 1.6;
     }
 
     /* Name row layout */
     .name-row {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       flex-wrap: wrap;
     }
     .name-row .field {
       flex: 1 1 0;
+      min-width: 200px;
     }
 
     /* Visually force uppercase display on last name */
@@ -242,71 +319,101 @@
       text-transform: uppercase;
     }
 
-    /* === Part A – Vocabulary Matching layout === */
+    /* === Part A – Modern Vocabulary Matching === */
     #partA h2 {
       text-align: left;
-      margin-bottom: 0.5rem;
+      margin-bottom: 8px;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #0f172a;
     }
 
     .partA-intro {
-      font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 24px;
+      line-height: 1.6;
     }
 
-    /* Each line = grid: term on the left, dropdown on the right */
     #partA ol {
       margin: 0;
-      padding-left: 1.5rem; /* keeps automatic numbering */
+      padding-left: 2rem;
+      counter-reset: item;
     }
 
-    /* Underline each vocab row with a faint separator */
-#partA ol li {
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-}
-#partA ol li:last-child {
-  border-bottom: none;
-}
+    #partA ol li {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+    
+    #partA ol li:hover {
+      background: #f8f9fc;
+      margin-left: -12px;
+      margin-right: -12px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 12px;
+    }
+    
+    #partA ol li:last-child {
+      border-bottom: none;
+    }
 
-/* Small preview of the full selected definition */
-.definition-preview {
-  margin-top: 4px;
-  font-size: 0.85rem;
-  color: #6b7280;
-}
+    .definition-preview {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #64748b;
+      font-style: italic;
+      line-height: 1.5;
+    }
 
     .vocab-row {
       display: grid;
-      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
-      column-gap: 18px;
+      grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+      column-gap: 24px;
       align-items: center;
     }
 
     .vocab-term {
-      font-size: 0.95rem;
-      color: #111827;
-      font-weight: 500;
+      font-size: 1rem;
+      color: #0f172a;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
 
     .vocab-select {
       margin: 0;
     }
 
-    /* Blur background when exit warning is active – GLOBAL (all screen sizes) */
+    /* Part B section styling */
+    #partB h2 {
+      text-align: left;
+      margin-bottom: 8px;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    #partB .muted strong {
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* Modern exit warning overlay */
     body.exit-lock {
       overflow: hidden;
     }
     body.exit-lock header,
     body.exit-lock main {
-      filter: blur(6px);
+      filter: blur(8px);
       pointer-events: none;
     }
 
     body.overlay-active main,
     body.overlay-active header {
-      filter: blur(5px);
+      filter: blur(8px);
       pointer-events: none;
     }
 
@@ -314,16 +421,125 @@
       overflow: hidden;
     }
 
-    /* On mobile, stack term + select */
-    @media (max-width: 720px) {
-      .vocab-row {
-        grid-template-columns: 1fr;
-        row-gap: 6px;
+    #exitOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #exitOverlay > div {
+      background: #ffffff;
+      max-width: 480px;
+      width: 92%;
+      border-radius: 24px;
+      padding: 32px 32px 28px;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.4);
+      font-family: 'Inter', system-ui, sans-serif;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
+    #exitOverlay h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.5rem;
+      color: #0f172a;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    #exitOverlayStrike {
+      margin: 8px 0 12px 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #dc2626;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: left;
+    }
+
+    #exitOverlayMessage {
+      margin: 0 0 16px 0;
+      font-size: 0.95rem;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    #exitOverlayCountdownText {
+      margin: 16px 0 8px 0;
+      font-size: 0.9rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    #exitOverlayCountdownDigits {
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin: 0 0 24px 0;
+      color: #dc2626;
+      font-family: 'Inter', monospace;
+      letter-spacing: -0.02em;
+    }
+
+    #exitOverlay button {
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #exitOverlayStay {
+      border: 2px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #2563eb;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    #exitOverlayStay:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    #exitOverlayLeave {
+      border: none;
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+    }
+
+    #exitOverlayLeave:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    }
+
     /* Responsive tweaks */
-    @media (max-width: 720px) {
+    @media (max-width: 768px) {
       body {
         padding-top: 100px;
       }
@@ -331,24 +547,35 @@
       header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 6px;
-        padding-inline: 16px;
+        gap: 10px;
+        padding-inline: 20px;
       }
 
       #timer {
         align-self: flex-end;
+        font-size: 0.9rem;
+        padding: 8px 16px;
       }
 
       main {
-        margin: 16px auto 32px;
-        padding: 24px 16px 32px;
-        border-radius: 12px;
+        margin: 20px auto 40px;
+        padding: 32px 24px 40px;
+        border-radius: 16px;
       }
 
       .card {
-        margin: 24px auto;
-        padding: 20px 18px 24px;
+        margin: 32px auto;
+        padding: 32px 24px 40px;
         max-width: 100%;
+      }
+
+      .vocab-row {
+        grid-template-columns: 1fr;
+        row-gap: 10px;
+      }
+
+      .name-row .field {
+        min-width: 100%;
       }
     }
   </style>
@@ -362,13 +589,13 @@
 
   <main>
     <span id="langSentinel" style="display:none;">
-  This reference sentence is used only to detect automatic translation of the exam page.
-</span>
+      This reference sentence is used only to detect automatic translation of the exam page.
+    </span>
     
     <!-- LOGIN -->
     <section id="login" class="card">
       <h2>Commencer l'épreuve</h2>
-      <p>Merci de renseigner vos informations pour commencer. Une fois l’épreuve lancée, vous disposerez de <b>60 minutes</b> pour la compléter.</p>
+      <p>Merci de renseigner vos informations pour commencer. Une fois l'épreuve lancée, vous disposerez de <b>60 minutes</b> pour la compléter.</p>
 
       <label>Nom et prénom :</label>
       <div class="name-row">
@@ -401,25 +628,24 @@
 
     <!-- CONFIRM -->
     <section id="confirm" class="card">
-      <h2>Avant de commencer l’épreuve</h2>
+      <h2>Avant de commencer l'épreuve</h2>
 
-      <p class="muted"><strong>Comment fonctionne l’épreuve&nbsp;?</strong></p>
+      <p class="muted"><strong>Comment fonctionne l'épreuve&nbsp;?</strong></p>
       <ul class="muted">
-        <li>L’épreuve se déroule en <strong>plein écran</strong>.</li>
-        <li>Si vous quittez la fenêtre ou changez d’application, un <strong>message d’avertissement</strong> apparaît.</li>
-        <li>Vous avez <strong>15&nbsp;secondes</strong> pour revenir, sinon l’épreuve est arrêtée et devra être recommencée.</li>
-        <li>Après <strong>3 évènements techniques</strong> (sortie du plein écran, changement de fenêtre, etc.), l’épreuve est <strong>envoyée automatiquement</strong> à l’enseignant.</li>
-  
+        <li>L'épreuve se déroule en <strong>plein écran</strong>.</li>
+        <li>Si vous quittez la fenêtre ou changez d'application, un <strong>message d'avertissement</strong> apparaît.</li>
+        <li>Vous avez <strong>15&nbsp;secondes</strong> pour revenir, sinon l'épreuve est arrêtée et devra être recommencée.</li>
+        <li>Après <strong>3 évènements techniques</strong> (sortie du plein écran, changement de fenêtre, etc.), l'épreuve est <strong>envoyée automatiquement</strong> à l'enseignant.</li>
       </ul>
 
-      <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
+      <hr>
 
       <p class="muted"><strong>Vérifiez vos informations</strong></p>
       <p><b>Nom &amp; prénom :</b> <span id="confirmName"></span></p>
       <p><b>Email :</b> <span id="confirmEmail"></span></p>
       <p><b>Groupe :</b> <span id="confirmGroup"></span></p>
       <p class="muted">
-        Si quelque chose n’est pas correct, cliquez sur «&nbsp;Modifier&nbsp;» pour revenir à l’écran précédent.
+        Si quelque chose n'est pas correct, cliquez sur «&nbsp;Modifier&nbsp;» pour revenir à l'écran précédent.
       </p>
 
       <div class="btn-row">
@@ -460,7 +686,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q1"></div>
+                <div class="definition-preview" data-for="q1"></div>
               </div>
             </li>
 
@@ -480,7 +706,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q2"></div>
+                <div class="definition-preview" data-for="q2"></div>
               </div>
             </li>
 
@@ -500,7 +726,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q3"></div>
+                <div class="definition-preview" data-for="q3"></div>
               </div>
             </li>
 
@@ -520,7 +746,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q4"></div>
+                <div class="definition-preview" data-for="q4"></div>
               </div>
             </li>
 
@@ -540,7 +766,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q5"></div>
+                <div class="definition-preview" data-for="q5"></div>
               </div>
             </li>
 
@@ -560,7 +786,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q6"></div>
+                <div class="definition-preview" data-for="q6"></div>
               </div>
             </li>
 
@@ -580,7 +806,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q7"></div>
+                <div class="definition-preview" data-for="q7"></div>
               </div>
             </li>
 
@@ -600,7 +826,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q8"></div>
+                <div class="definition-preview" data-for="q8"></div>
               </div>
             </li>
 
@@ -620,7 +846,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q9"></div>
+                <div class="definition-preview" data-for="q9"></div>
               </div>
             </li>
 
@@ -640,7 +866,7 @@
                   <option>Doing business in a way that meets current needs without harming the environment, society, or future generations.</option>
                   <option>A measure that compares the profit gained from an investment to the amount of money invested, usually expressed as a percentage.</option>
                 </select>
-                 <div class="definition-preview" data-for="q10"></div>
+                <div class="definition-preview" data-for="q10"></div>
               </div>
             </li>
           </ol>
@@ -695,81 +921,25 @@
   </main>
 
   <!-- Exit warning overlay -->
-  <div id="exitOverlay" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(15,23,42,0.80);
-    backdrop-filter:blur(6px);
-    z-index:2000;
-    align-items:center;
-    justify-content:center;
-  ">
-    <div style="
-      background:#ffffff;
-      max-width:420px;
-      width:90%;
-      border-radius:16px;
-      padding:20px 22px 18px;
-      box-shadow:0 18px 45px rgba(15,23,42,0.25);
-      font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    ">
-      <h2 style="margin:0 0 8px 0; font-size:1rem; color:#111827;">
-        Quitter l’épreuve ?
-      </h2>
-          <div id="exitOverlayStrike" style="
-      margin:4px 0 6px 0;
-      font-size:1.5rem;
-      font-weight:700;
-      color:#b91c1c;
-      letter-spacing:0.06em;
-      text-transform:uppercase;
-      text-align:left;
-    ">
-      <!-- Filled dynamically, e.g. AVERTISSEMENT 1 / 2 -->
-    </div>
-      <p id="exitOverlayMessage" style="margin:0 0 8px 0; font-size:0.9rem; color:#4b5563;">
-        Vous êtes sur le point de quitter l’écran de l’épreuve.
+  <div id="exitOverlay">
+    <div>
+      <h2>Quitter l'épreuve ?</h2>
+      <div id="exitOverlayStrike"></div>
+      <p id="exitOverlayMessage">
+        Vous êtes sur le point de quitter l'écran de l'épreuve.
         Si vous continuez, votre épreuve sera effacée.
       </p>
 
-      <!-- NEW: countdown text + big digits -->
-      <p id="exitOverlayCountdownText" style="margin:0 0 4px 0; font-size:0.9rem; color:#6b7280; text-align:center;">
-        Vous avez 15&nbsp;secondes pour rester dans l’épreuve avant qu’elle ne soit interrompue.
+      <p id="exitOverlayCountdownText">
+        Vous avez 15&nbsp;secondes pour rester dans l'épreuve avant qu'elle ne soit interrompue.
       </p>
-      <div id="exitOverlayCountdownDigits" style="
-        font-size:2.6rem;
-        font-weight:700;
-        text-align:center;
-        margin:0 0 16px 0;
-        color:#111827;
-      ">
-        15
-      </div>
+      <div id="exitOverlayCountdownDigits">15</div>
 
-      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
-        <button type="button" id="exitOverlayStay" style="
-          padding:8px 16px;
-          border-radius:999px;
-          border:1px solid #c7d2fe;
-          background:#eef2ff;
-          color:#2643e9;
-          font-size:0.9rem;
-          font-weight:600;
-          cursor:pointer;
-        ">
-          Rester dans l’épreuve
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+        <button type="button" id="exitOverlayStay">
+          Rester dans l'épreuve
         </button>
-        <button type="button" id="exitOverlayLeave" style="
-          padding:8px 16px;
-          border-radius:999px;
-          border:none;
-          background:#b91c1c;
-          color:#fff;
-          font-size:0.9rem;
-          font-weight:600;
-          cursor:pointer;
-        ">
+        <button type="button" id="exitOverlayLeave">
           Quitter et effacer
         </button>
       </div>
@@ -783,7 +953,7 @@
     // ----- Global configuration for this exam -----
     const EXAM_CONFIG = {
       examId: "M2MD_CC1_2025",
-      classCode: "Q73CB",        // <-- put real code here before exam
+      classCode: "Q73CB",
       debugCode: "DEBUG",
       examTitleBase: "CC1 - English — Resource Management",
       allowedGroups: ["M2 MDO G1", "M2 MDO G2", "M2 MDO G3"],
@@ -796,15 +966,14 @@
     let examDeadline = null;
     let timer = null;
     let quill = null;
-    let isMobile = false;       // set inside DOMContentLoaded
+    let isMobile = false;
     let safeBlurUntil = 0;
 
-    // NEW: anti-cheat counters + countdown
-     let violationCount = 0;
-  const MAX_VIOLATIONS = 3;         // 3rd event = auto-submit
-  const MAX_WARNINGS = MAX_VIOLATIONS - 1; // 1 and 2 show popup
-  let exitCountdownTimer = null;
-  let exitSecondsRemaining = 0;
+    let violationCount = 0;
+    const MAX_VIOLATIONS = 3;
+    const MAX_WARNINGS = MAX_VIOLATIONS - 1;
+    let exitCountdownTimer = null;
+    let exitSecondsRemaining = 0;
 
     let selectedGroup = "";
     let currentExamTitle = EXAM_CONFIG.examTitleBase;
@@ -854,7 +1023,7 @@
       "ROI (Return on Investment)"
     ];
 
-    // Create Quill lazily (only when Part B is shown)
+    // Create Quill lazily
     function ensureQuill() {
       if (quill) return;
 
@@ -871,14 +1040,12 @@
 
       const root = quill.root;
 
-      // Arm safe blur when typing/tapping in editor (for iOS mobile blur bug)
       ["focus", "click", "keydown"].forEach(evt => {
         root.addEventListener(evt, () => {
           if (isMobile) armSafeBlur(1500);
         });
       });
 
-      // Lock down copy/paste etc.
       root.addEventListener("contextmenu", e => e.preventDefault());
       root.addEventListener("paste", e => e.preventDefault());
       root.addEventListener("copy", e => e.preventDefault());
@@ -891,11 +1058,11 @@
       });
     }
 
-    // Randomise options but keep first option as "Select a definition"
+    // Randomise options but keep first option
     function randomizeSelectsKeepFirst() {
       document.querySelectorAll("#partA select").forEach(sel => {
         const opts = Array.from(sel.options);
-        const first = opts.shift(); // first option = placeholder
+        const first = opts.shift();
         for (let i = opts.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [opts[i].text, opts[j].text] = [opts[j].text, opts[i].text];
@@ -907,37 +1074,34 @@
       });
     }
 
-function initDefinitionPreviews() {
-  document.querySelectorAll('#partA select').forEach(sel => {
-    const name = sel.name; // e.g. "q1"
-    const preview = document.querySelector(
-      `.definition-preview[data-for="${name}"]`
-    );
-    if (!preview) return;
+    function initDefinitionPreviews() {
+      document.querySelectorAll('#partA select').forEach(sel => {
+        const name = sel.name;
+        const preview = document.querySelector(
+          `.definition-preview[data-for="${name}"]`
+        );
+        if (!preview) return;
 
-    const update = () => {
-      const opt = sel.options[sel.selectedIndex];
-      const text = opt ? opt.text : "";
+        const update = () => {
+          const opt = sel.options[sel.selectedIndex];
+          const text = opt ? opt.text : "";
 
-      // If it's the placeholder (first option), show nothing
-      if (!opt || sel.selectedIndex === 0) {
-        preview.textContent = "";
-        sel.title = "";
-        return;
-      }
+          if (!opt || sel.selectedIndex === 0) {
+            preview.textContent = "";
+            sel.title = "";
+            return;
+          }
 
-      // Otherwise, show the full definition under the dropdown
-      preview.textContent = text;
-      sel.title = text; // tooltip on hover (desktop)
-    };
+          preview.textContent = text;
+          sel.title = text;
+        };
 
-    sel.addEventListener("change", update);
-    // Initial state
-    update();
-  });
-}
+        sel.addEventListener("change", update);
+        update();
+      });
+    }
 
-    // Randomise question order in Part A
+    // Randomise question order
     function randomizeQuestionOrder() {
       const list = document.querySelector("#partA ol");
       if (!list) return;
@@ -952,7 +1116,6 @@ function initDefinitionPreviews() {
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-      // ---- User agent / device flags ----
       const ua = navigator.userAgent;
       const isIOSUA =
         /iPad|iPhone|iPod/.test(ua) ||
@@ -960,51 +1123,47 @@ function initDefinitionPreviews() {
 
       isMobile = /Mobi|Android/i.test(ua) || isIOSUA;
 
-      // Disable right-click everywhere on the page
-document.addEventListener("contextmenu", function (e) {
-  e.preventDefault();
-}, { capture: true });
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      }, { capture: true });
 
-      // Detect Safari (desktop & iOS) – block the exam on this browser
-const BLOCK_SAFARI = false; // ← set to true  if you want to reblock or false to unblock
+      const BLOCK_SAFARI = false;
+      const isSafari = /^((?!chrome|crios|fxios|android).)*safari/i.test(ua);
 
-const isSafari = /^((?!chrome|crios|fxios|android).)*safari/i.test(ua);
+      if (isSafari && BLOCK_SAFARI) {
+        const main = document.querySelector("main");
+        if (main) {
+          main.innerHTML = `
+            <section class="card">
+              <h2 style="display:flex; align-items:center; gap:8px; margin-top:0;">
+                <span>⚠️</span>
+                <span>Navigateur non pris en charge</span>
+              </h2>
+              <p>
+                Pour des raisons techniques, cette épreuve en ligne n'est pas disponible sur
+                <strong>Safari</strong>.
+              </p>
+              <p>
+                Merci d'ouvrir ce lien dans l'un des navigateurs suivants&nbsp;:
+              </p>
+              <ul>
+                <li><strong>Google Chrome</strong></li>
+                <li><strong>Microsoft Edge</strong></li>
+                <li><strong>Mozilla Firefox</strong></li>
+              </ul>
+              <p class="muted">
+                Si vous voyez encore ce message alors que vous utilisez déjà l'un de ces navigateurs,
+                merci d'en informer immédiatement votre enseignant.
+              </p>
+            </section>
+          `;
+        }
 
-if (isSafari && BLOCK_SAFARI) {
-  const main = document.querySelector("main");
-  if (main) {
-    main.innerHTML = `
-      <section class="card">
-        <h2 style="display:flex; align-items:center; gap:8px; margin-top:0;">
-          <span>⚠️</span>
-          <span>Navigateur non pris en charge</span>
-        </h2>
-        <p>
-          Pour des raisons techniques, cette épreuve en ligne n’est pas disponible sur
-          <strong>Safari</strong>.
-        </p>
-        <p>
-          Merci d’ouvrir ce lien dans l’un des navigateurs suivants&nbsp;:
-        </p>
-        <ul>
-          <li><strong>Google Chrome</strong></li>
-          <li><strong>Microsoft Edge</strong></li>
-          <li><strong>Mozilla Firefox</strong></li>
-        </ul>
-        <p class="muted">
-          Si vous voyez encore ce message alors que vous utilisez déjà l’un de ces navigateurs,
-          merci d’en informer immédiatement votre enseignant.
-        </p>
-      </section>
-    `;
-  }
+        const timerEl = document.getElementById("timer");
+        if (timerEl) timerEl.textContent = "";
+        return;
+      }
 
-  const timerEl = document.getElementById("timer");
-  if (timerEl) timerEl.textContent = "";
-  return;
-}
-
-      // ----- EmailJS init -----
       if (window.emailjs) {
         try {
           emailjs.init({
@@ -1015,14 +1174,13 @@ if (isSafari && BLOCK_SAFARI) {
         }
       }
 
-      // ----- DOM Elements -----
       const login = document.getElementById("login");
       const confirmSec = document.getElementById("confirm");
       const exam = document.getElementById("exam");
       const titleHeader = document.getElementById("examTitleHeader");
 
       if (titleHeader) {
-        titleHeader.textContent = EXAM_CONFIG.examTitleBase; // base without group
+        titleHeader.textContent = EXAM_CONFIG.examTitleBase;
       }
 
       const startBtn = document.getElementById("startBtn");
@@ -1052,44 +1210,41 @@ if (isSafari && BLOCK_SAFARI) {
       const classCodeField = document.getElementById("classCodeField");
       const groupNameField = document.getElementById("groupNameField");
 
-      // Exit overlay elements
       const exitOverlay = document.getElementById("exitOverlay");
       const exitOverlayMessage = document.getElementById("exitOverlayMessage");
       const exitOverlayStay = document.getElementById("exitOverlayStay");
       const exitOverlayLeave = document.getElementById("exitOverlayLeave");
       const exitOverlayCountdownText = document.getElementById("exitOverlayCountdownText");
       const exitOverlayCountdownDigits = document.getElementById("exitOverlayCountdownDigits");
-    const exitOverlayStrike = document.getElementById("exitOverlayStrike");
-      // Translation sentinel – detects if the page text was auto-translated
-const langSentinel = document.getElementById("langSentinel");
-const langSentinelBaseline = langSentinel
-  ? langSentinel.textContent.trim()
-  : null;
+      const exitOverlayStrike = document.getElementById("exitOverlayStrike");
 
-if (langSentinel && langSentinelBaseline) {
-  setInterval(() => {
-    if (!examActive || examSubmitted) return;
+      const langSentinel = document.getElementById("langSentinel");
+      const langSentinelBaseline = langSentinel
+        ? langSentinel.textContent.trim()
+        : null;
 
-    const current = langSentinel.textContent.trim();
-    if (current !== langSentinelBaseline) {
-      // Page text has been modified (likely translation)
-      logEvent(
-        "Possible page translation detected",
-        `Sentinel changed from "${langSentinelBaseline}" to "${current}".`
-      );
+      if (langSentinel && langSentinelBaseline) {
+        setInterval(() => {
+          if (!examActive || examSubmitted) return;
 
-      askToExitExam(
-        "Une modification automatique de la langue de la page a été détectée. " +
-        "Merci de désactiver la traduction et de rester sur la version originale de l'épreuve.",
-        "translationWatch"
-      );
-    }
-  }, 2000); // check every 2 seconds
-}
+          const current = langSentinel.textContent.trim();
+          if (current !== langSentinelBaseline) {
+            logEvent(
+              "Possible page translation detected",
+              `Sentinel changed from "${langSentinelBaseline}" to "${current}".`
+            );
+
+            askToExitExam(
+              "Une modification automatique de la langue de la page a été détectée. " +
+              "Merci de désactiver la traduction et de rester sur la version originale de l'épreuve.",
+              "translationWatch"
+            );
+          }
+        }, 2000);
+      }
 
       const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
-      // Safe-blur for Part A dropdowns (iOS bug)
       document.querySelectorAll("#partA select").forEach(sel => {
         sel.addEventListener("mousedown", () => {
           if (isMobile) armSafeBlur(1500);
@@ -1099,7 +1254,6 @@ if (langSentinel && langSentinelBaseline) {
         });
       });
 
-      // -------- Session activity log --------
       const sessionEvents = [];
 
       function formatTimeStamp(date = new Date()) {
@@ -1124,7 +1278,6 @@ if (langSentinel && langSentinelBaseline) {
         console.log("[SESSION]", entry);
       }
 
-      // Guard: if any required node is missing, stop
       const required = [
         login, confirmSec, exam, startBtn, confirmBackBtn, confirmBeginBtn,
         confirmName, confirmEmail, confirmGroup, partA, partB, toPartA, toPartB,
@@ -1136,14 +1289,12 @@ if (langSentinel && langSentinelBaseline) {
         return;
       }
 
-      // ----- State Flags -----
       let examSubmitted = false;
       let examActive = false;
       let isStartingExam = false;
       let exitPromptOpen = false;
-      let antiCheatSuspendedUntil = 0;   // grace window after "Rester"
+      let antiCheatSuspendedUntil = 0;
 
-      // Helper to visually lock/unlock background when overlay is active
       function setOverlayActive(active) {
         if (active) {
           document.body.classList.add("overlay-active", "exit-lock");
@@ -1152,7 +1303,6 @@ if (langSentinel && langSentinelBaseline) {
         }
       }
 
-      // ----- Helpers -----
       function resetToLanding() {
         console.log("🔄 resetToLanding called");
 
@@ -1162,10 +1312,10 @@ if (langSentinel && langSentinelBaseline) {
           console.error("Error clearing timer in resetToLanding:", e);
         }
 
-          if (timerDisplay) {
-    timerDisplay.textContent = "";
-    timerDisplay.style.display = "none";   // 🔹 Hide on home/landing
-  }
+        if (timerDisplay) {
+          timerDisplay.textContent = "";
+          timerDisplay.style.display = "none";
+        }
 
         if (exitCountdownTimer) {
           clearInterval(exitCountdownTimer);
@@ -1178,7 +1328,7 @@ if (langSentinel && langSentinelBaseline) {
         exitPromptOpen = false;
         antiCheatSuspendedUntil = 0;
         violationCount = 0;
-        sessionEvents.length = 0;   // clear log
+        sessionEvents.length = 0;
         setOverlayActive(false);
 
         if (form) form.reset();
@@ -1210,40 +1360,40 @@ if (langSentinel && langSentinelBaseline) {
         console.log("✅ Landing screen forced.");
       }
 
- function startTimer() {
-  clearInterval(timer);
-  timer = setInterval(() => {
-    if (!examDeadline) return;
-    const now = Date.now();
-    const remainingMs = examDeadline - now;
-    const totalSec = Math.max(0, Math.floor(remainingMs / 1000));
-    const m = Math.floor(totalSec / 60);
-    const s = totalSec % 60;
+      function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+          if (!examDeadline) return;
+          const now = Date.now();
+          const remainingMs = examDeadline - now;
+          const totalSec = Math.max(0, Math.floor(remainingMs / 1000));
+          const m = Math.floor(totalSec / 60);
+          const s = totalSec % 60;
 
-    if (timerDisplay) {
-      timerDisplay.textContent = `Temps restant : ${m}:${s
-        .toString()
-        .padStart(2, "0")}`;
+          if (timerDisplay) {
+            timerDisplay.textContent = `Temps restant : ${m}:${s
+              .toString()
+              .padStart(2, "0")}`;
 
-      // Neutral style above 5 minutes
-      if (totalSec > 5 * 60) {
-        timerDisplay.style.background = "#ffffff";
-        timerDisplay.style.color = "#111827";
-        timerDisplay.style.borderColor = "#4b5563";
-      } else {
-        // 🔴 Under 5 minutes: soft “urgent” style
-        timerDisplay.style.background = "#fee2e2"; // light red
-        timerDisplay.style.color = "#b91c1c";      // red text
-        timerDisplay.style.borderColor = "#b91c1c";
+            if (totalSec > 5 * 60) {
+              timerDisplay.style.background = "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)";
+              timerDisplay.style.color = "#ffffff";
+              timerDisplay.style.borderColor = "#2563eb";
+              timerDisplay.style.boxShadow = "0 4px 12px rgba(37, 99, 235, 0.25)";
+            } else {
+              timerDisplay.style.background = "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)";
+              timerDisplay.style.color = "#ffffff";
+              timerDisplay.style.borderColor = "#dc2626";
+              timerDisplay.style.boxShadow = "0 4px 16px rgba(220, 38, 38, 0.35)";
+            }
+          }
+
+          if (remainingMs <= 0) {
+            clearInterval(timer);
+            submitExam("Time limit reached – exam auto-submitted.");
+          }
+        }, 1000);
       }
-    }
-
-    if (remainingMs <= 0) {
-      clearInterval(timer);
-      submitExam("Time limit reached – exam auto-submitted.");
-    }
-  }, 1000);
-}
 
       function enableFullScreen() {
         if (document.documentElement.requestFullscreen) {
@@ -1287,11 +1437,11 @@ if (langSentinel && langSentinelBaseline) {
         if (Date.now() < antiCheatSuspendedUntil) return;
 
         violationCount += 1;
-              // Update big warning counter: AVERTISSEMENT X / 2
-      if (exitOverlayStrike) {
-        const warnIndex = Math.min(violationCount, MAX_WARNINGS);
-        exitOverlayStrike.textContent = `AVERTISSEMENT ${warnIndex} / ${MAX_WARNINGS}`;
-      }
+        
+        if (exitOverlayStrike) {
+          const warnIndex = Math.min(violationCount, MAX_WARNINGS);
+          exitOverlayStrike.textContent = `AVERTISSEMENT ${warnIndex} / ${MAX_WARNINGS}`;
+        }
 
         const msgBase =
           reason ||
@@ -1300,7 +1450,6 @@ if (langSentinel && langSentinelBaseline) {
 
         const sourceText = source ? `${source} – ` : "";
 
-        // 3rd event (or more) → auto-submit immediately
         if (violationCount >= MAX_VIOLATIONS) {
           logEvent(
             "Anti-cheat limit reached",
@@ -1346,7 +1495,6 @@ if (langSentinel && langSentinelBaseline) {
 
         setOverlayActive(true);
 
-        // Start 15-second countdown
         exitSecondsRemaining = 15;
         if (exitOverlayCountdownText) {
           exitOverlayCountdownText.textContent =
@@ -1381,7 +1529,6 @@ if (langSentinel && langSentinelBaseline) {
             if (exitOverlay) exitOverlay.style.display = "none";
             setOverlayActive(false);
 
-            // Timeout is treated like "leave" → exam reset, not auto-submit
             logEvent(
               "Exit warning timeout",
               `No interaction on warning #${violationCount}. Exam reset.`
@@ -1394,16 +1541,14 @@ if (langSentinel && langSentinelBaseline) {
         }, 1000);
       }
 
-      // Overlay buttons
       if (exitOverlayStay) {
         exitOverlayStay.addEventListener("click", () => {
-          // user chooses to continue
           if (exitCountdownTimer) {
             clearInterval(exitCountdownTimer);
             exitCountdownTimer = null;
           }
 
-          antiCheatSuspendedUntil = Date.now() + 2000; // 2 seconds grace
+          antiCheatSuspendedUntil = Date.now() + 2000;
           exitPromptOpen = false;
 
           if (exitOverlay) exitOverlay.style.display = "none";
@@ -1442,12 +1587,10 @@ if (langSentinel && langSentinelBaseline) {
         });
       }
 
-      // Force LAST NAME input uppercase
       studentLastNameInput.addEventListener("input", () => {
         studentLastNameInput.value = studentLastNameInput.value.toUpperCase();
       });
 
-      // ----- Anti-cheat listeners -----
       document.addEventListener("visibilitychange", () => {
         if (isStartingExam) {
           console.log("⏱ Ignoring visibilitychange during exam startup");
@@ -1524,10 +1667,8 @@ if (langSentinel && langSentinelBaseline) {
         }
       });
 
-      // Start from a clean landing state
       resetToLanding();
 
-      // ----- Exam flow -----
       function beginExam() {
         const firstName = (studentFirstNameInput.value || "").trim();
         const lastName = (studentLastNameInput.value || "").trim().toUpperCase();
@@ -1580,16 +1721,15 @@ if (langSentinel && langSentinelBaseline) {
         }, 1200);
 
         if (timerDisplay) {
-    timerDisplay.style.display = "inline-block";  // 🔹 Show when exam starts
-  }
+          timerDisplay.style.display = "inline-block";
+        }
         enableFullScreen();
-startTimer();
-randomizeQuestionOrder();
-randomizeSelectsKeepFirst();
-initDefinitionPreviews();   // 👈 add this line
+        startTimer();
+        randomizeQuestionOrder();
+        randomizeSelectsKeepFirst();
+        initDefinitionPreviews();
       }
 
-      // Start → Confirm
       startBtn.addEventListener("click", () => {
         const firstName = (studentFirstNameInput.value || "").trim();
         const lastName = (studentLastNameInput.value || "").trim().toUpperCase();
@@ -1635,7 +1775,6 @@ initDefinitionPreviews();   // 👈 add this line
         beginExam();
       });
 
-      // Navigation Part A <-> Part B
       toPartB.addEventListener("click", () => {
         partA.classList.remove("active");
         partB.classList.add("active");
@@ -1649,7 +1788,6 @@ initDefinitionPreviews();   // 👈 add this line
         logEvent("Returned to Part A", "Student navigated from Part B to Part A");
       });
 
-      // Submit handler
       form.addEventListener("submit", e => {
         e.preventDefault();
         submitExam();
@@ -1702,7 +1840,6 @@ initDefinitionPreviews();   // 👈 add this line
         const finalNote = "___ / 20";
         const group = selectedGroup || groupNameField.value || EXAM_CONFIG.classLabel;
 
-        // Build session activity log HTML
         let sessionLogHTML = "";
         if (sessionEvents.length > 0) {
           const rows = sessionEvents.map(ev => `
@@ -1768,7 +1905,7 @@ initDefinitionPreviews();   // 👈 add this line
 
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0;">
 
-             <h3 style="color:#004080;margin:10px 0 8px 0;">Part B – Written Exercise</h3>
+          <h3 style="color:#004080;margin:10px 0 8px 0;">Part B – Written Exercise</h3>
           <div style="border:1px solid #ccc;border-radius:6px;padding:10px;background:#f9f9f9;">
             ${emailHtml}
           </div>
