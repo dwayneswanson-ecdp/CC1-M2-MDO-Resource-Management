@@ -283,6 +283,22 @@
       padding: 12px;
     }
 
+    /* Remove shadow from Quill buttons for better readability */
+    .ql-toolbar button,
+    .ql-toolbar .ql-picker {
+      box-shadow: none !important;
+    }
+
+    .ql-toolbar button:hover,
+    .ql-toolbar .ql-picker:hover {
+      background: #e2e8f0;
+    }
+
+    .ql-toolbar button.ql-active {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
     .ql-container.ql-snow {
       border: none;
       min-height: 300px;
@@ -594,63 +610,82 @@
     
     <!-- LOGIN -->
     <section id="login" class="card">
-      <h2>Commencer l'épreuve</h2>
-      <p>Merci de renseigner vos informations pour commencer. Une fois l'épreuve lancée, vous disposerez de <b>60 minutes</b> pour la compléter.</p>
+      <h2 style="font-size: 2rem; margin-bottom: 16px; text-align: center;">Commencer l'épreuve</h2>
+      <p style="text-align: center; font-size: 1rem; color: #64748b; margin-bottom: 32px;">Merci de renseigner vos informations pour commencer. Une fois l'épreuve lancée, vous disposerez de <b style="color: #2563eb;">60 minutes</b> pour la compléter.</p>
 
-      <label>Nom et prénom :</label>
-      <div class="name-row">
-        <div class="field">
-          <input type="text" id="studentLastName" class="upper" placeholder="NOM (en majuscules)" required>
+      <div style="background: #f8f9fc; padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+        <label>Nom et prénom</label>
+        <div class="name-row">
+          <div class="field">
+            <input type="text" id="studentLastName" class="upper" placeholder="NOM" required>
+          </div>
+          <div class="field">
+            <input type="text" id="studentFirstName" placeholder="Prénom" required>
+          </div>
         </div>
-        <div class="field">
-          <input type="text" id="studentFirstName" placeholder="Prénom" required>
-        </div>
+
+        <label>Adresse e-mail</label>
+        <input type="email" id="studentEmail" placeholder="votre.email@example.com" required>
+
+        <label>Groupe</label>
+        <select id="groupSelect" required>
+          <option value="">Sélectionner votre groupe</option>
+          <option value="M2 MDO G1">M2 MDO G1</option>
+          <option value="M2 MDO G2">M2 MDO G2</option>
+          <option value="M2 MDO G3">M2 MDO G3</option>
+        </select>
+
+        <label>Code de classe</label>
+        <input type="text" id="classCode" placeholder="Code fourni par l'enseignant" required>
       </div>
 
-      <label>Adresse e-mail :</label>
-      <input type="email" id="studentEmail" required>
-
-      <label>Groupe :</label>
-      <select id="groupSelect" required>
-        <option value="">Sélectionner votre groupe</option>
-        <option value="M2 MDO G1">M2 MDO G1</option>
-        <option value="M2 MDO G2">M2 MDO G2</option>
-        <option value="M2 MDO G3">M2 MDO G3</option>
-      </select>
-
-      <label>Code de classe :</label>
-      <input type="text" id="classCode" required>
-
-      <div class="btn-row center">
-        <button id="startBtn" type="button">Commencer</button>
+      <div class="btn-row center" style="margin-top: 32px;">
+        <button id="startBtn" type="button" style="font-size: 1.05rem; padding: 16px 48px;">Commencer l'épreuve</button>
       </div>
     </section>
 
     <!-- CONFIRM -->
     <section id="confirm" class="card">
-      <h2>Avant de commencer l'épreuve</h2>
+      <h2 style="font-size: 2rem; margin-bottom: 24px;">Avant de commencer l'épreuve</h2>
 
-      <p class="muted"><strong>Comment fonctionne l'épreuve&nbsp;?</strong></p>
-      <ul class="muted">
-        <li>L'épreuve se déroule en <strong>plein écran</strong>.</li>
-        <li>Si vous quittez la fenêtre ou changez d'application, un <strong>message d'avertissement</strong> apparaît.</li>
-        <li>Vous avez <strong>15&nbsp;secondes</strong> pour revenir, sinon l'épreuve est arrêtée et devra être recommencée.</li>
-        <li>Après <strong>3 évènements techniques</strong> (sortie du plein écran, changement de fenêtre, etc.), l'épreuve est <strong>envoyée automatiquement</strong> à l'enseignant.</li>
-      </ul>
+      <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-bottom: 28px;">
+        <p style="margin: 0 0 12px 0; font-weight: 600; color: #92400e; font-size: 1rem;">Comment fonctionne l'épreuve ?</p>
+        <ul style="margin: 0; padding-left: 20px; color: #78350f;">
+          <li style="margin-bottom: 8px;">L'épreuve se déroule en <strong>plein écran</strong>.</li>
+          <li style="margin-bottom: 8px;">Si vous quittez la fenêtre ou changez d'application, un <strong>message d'avertissement</strong> apparaît.</li>
+          <li style="margin-bottom: 8px;">Vous avez <strong>15&nbsp;secondes</strong> pour revenir, sinon l'épreuve est arrêtée et devra être recommencée.</li>
+          <li style="margin-bottom: 0;">Après <strong>3 évènements techniques</strong> (sortie du plein écran, changement de fenêtre, etc.), l'épreuve est <strong>envoyée automatiquement</strong> à l'enseignant.</li>
+        </ul>
+      </div>
 
-      <hr>
+      <div style="margin-bottom: 28px;">
+        <p style="margin: 0 0 16px 0; font-weight: 600; color: #0f172a; font-size: 1.1rem;">Vérifiez vos informations</p>
+        
+        <div style="display: grid; gap: 12px;">
+          <div style="background: #f8f9fc; padding: 16px 20px; border-radius: 10px; border: 2px solid #e2e8f0;">
+            <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Nom & Prénom</div>
+            <div style="font-size: 1.05rem; color: #0f172a; font-weight: 600;" id="confirmName"></div>
+          </div>
 
-      <p class="muted"><strong>Vérifiez vos informations</strong></p>
-      <p><b>Nom &amp; prénom :</b> <span id="confirmName"></span></p>
-      <p><b>Email :</b> <span id="confirmEmail"></span></p>
-      <p><b>Groupe :</b> <span id="confirmGroup"></span></p>
-      <p class="muted">
-        Si quelque chose n'est pas correct, cliquez sur «&nbsp;Modifier&nbsp;» pour revenir à l'écran précédent.
-      </p>
+          <div style="background: #f8f9fc; padding: 16px 20px; border-radius: 10px; border: 2px solid #e2e8f0;">
+            <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Email</div>
+            <div style="font-size: 1.05rem; color: #0f172a; font-weight: 600;" id="confirmEmail"></div>
+          </div>
 
-      <div class="btn-row">
+          <div style="background: #f8f9fc; padding: 16px 20px; border-radius: 10px; border: 2px solid #e2e8f0;">
+            <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Groupe</div>
+            <div style="font-size: 1.05rem; color: #0f172a; font-weight: 600;" id="confirmGroup"></div>
+          </div>
+        </div>
+
+        <p class="muted" style="margin-top: 16px; font-size: 0.9rem;">
+          Si quelque chose n'est pas correct, cliquez sur «&nbsp;Modifier&nbsp;» pour revenir à l'écran précédent.
+        </p>
+      </div>
+
+      <div class="btn-row" style="justify-content: space-between; margin-top: 32px;">
         <button type="button" class="btn-light" id="confirmBackBtn">← Modifier</button>
-        <button type="button" id="confirmBeginBtn">Commencer l'épreuve →</button>
+        <button type="button" id="confirmBeginBtn" style="font-size: 1.05rem; padding: 14px 40px;">Commencer l'épreuve →</button>
       </div>
     </section>
 
@@ -664,7 +699,12 @@
 
         <!-- PART A -->
         <div id="partA" class="active">
-          <h2>Part A – Vocabulary Matching</h2>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="margin: 0;">Part A – Vocabulary Matching</h2>
+            <div id="partAProgress" style="font-size: 0.95rem; color: #64748b; font-weight: 600; padding: 8px 16px; background: #f1f5f9; border-radius: 999px;">
+              <span id="partAAnswered">0</span>/10 answered
+            </div>
+          </div>
           <p class="partA-intro">
             Match each term with the correct definition by selecting an option in the dropdown list.
           </p>
@@ -911,6 +951,15 @@
             <div id="editor"></div>
           </div>
 
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding: 0 4px;">
+            <div id="wordCount" style="font-size: 0.9rem; color: #64748b;">
+              Word count: <span style="font-weight: 600; color: #475569;">0</span>
+            </div>
+            <div style="font-size: 0.85rem; color: #94a3b8; font-style: italic;">
+              Auto-saved
+            </div>
+          </div>
+
           <div class="btn-row">
             <button type="button" class="btn-light" id="toPartA">← Retour à la partie A</button>
             <button type="submit">Envoyer l'épreuve</button>
@@ -1046,6 +1095,11 @@
         });
       });
 
+      // Add word count tracking
+      quill.on('text-change', function() {
+        updateWordCount();
+      });
+
       root.addEventListener("contextmenu", e => e.preventDefault());
       root.addEventListener("paste", e => e.preventDefault());
       root.addEventListener("copy", e => e.preventDefault());
@@ -1113,6 +1167,19 @@
       }
 
       items.forEach(li => list.appendChild(li));
+    }
+
+    // Function to update word count
+    function updateWordCount() {
+      if (!quill) return;
+      
+      const text = quill.getText().trim();
+      const words = text.length > 0 ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
+      
+      const wordCountEl = document.querySelector("#wordCount span");
+      if (wordCountEl) {
+        wordCountEl.textContent = words;
+      }
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -1252,7 +1319,38 @@
         sel.addEventListener("touchstart", () => {
           if (isMobile) armSafeBlur(2000);
         });
+        
+        // Track answer progress
+        sel.addEventListener("change", updatePartAProgress);
       });
+
+      // Function to update Part A progress counter
+      function updatePartAProgress() {
+        const selects = document.querySelectorAll("#partA select");
+        let answered = 0;
+        selects.forEach(sel => {
+          if (sel.selectedIndex > 0) { // 0 is the placeholder
+            answered++;
+          }
+        });
+        
+        const counter = document.getElementById("partAAnswered");
+        if (counter) {
+          counter.textContent = answered;
+          
+          // Visual feedback when complete
+          const progress = document.getElementById("partAProgress");
+          if (progress) {
+            if (answered === 10) {
+              progress.style.background = "#dcfce7";
+              progress.style.color = "#166534";
+            } else {
+              progress.style.background = "#f1f5f9";
+              progress.style.color = "#64748b";
+            }
+          }
+        }
+      }
 
       const sessionEvents = [];
 
@@ -1780,6 +1878,7 @@
         partB.classList.add("active");
         logEvent("Moved to Part B", "Student navigated from Part A to Part B");
         ensureQuill();
+        updateWordCount(); // Initialize word count display
       });
 
       toPartA.addEventListener("click", () => {
